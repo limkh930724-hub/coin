@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인정보처리방침 — 금융 도구</title>
+    <meta name="description" content="금융 도구 서비스의 개인정보처리방침입니다. Google AdSense 및 제3자 서비스 이용에 관한 내용을 포함합니다.">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💹</text></svg>">
+    <!-- Google AdSense -->
+    <!--
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAF8F4; --bg-2: #FFFFFF; --bg-3: #F2EDE4;
+            --ink: #1A1510; --ink-2: #5C5045; --ink-3: #9E8E7C;
+            --accent: #C8923A; --accent-h: #B07D2E;
+            --border: #E5DDD0; --border-2: #D4C8B8;
+            --sh-sm: 0 1px 3px rgba(26,21,16,0.05); --r: 10px;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+        .topnav { position: sticky; top: 0; z-index: 200; background: rgba(250,248,244,0.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; gap: 0.25rem; height: 56px; }
+        .topnav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; letter-spacing: 0.1em; color: var(--ink); text-decoration: none; margin-right: auto; }
+        .topnav-link { font-size: 0.78rem; font-weight: 500; color: var(--ink-3); text-decoration: none; padding: 0.3rem 0.7rem; border-radius: 6px; transition: all 0.15s; }
+        .topnav-link:hover { color: var(--ink-2); background: var(--bg-3); }
+        @media (max-width: 600px) { .topnav { padding: 0 1.25rem; } .topnav-link { display: none; } }
+
+        .page-wrap { flex: 1; max-width: 720px; width: 100%; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+        .page-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        .header-badge { display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+        .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+        .page-header .updated { font-size: 0.76rem; color: var(--ink-3); }
+
+        .prose { display: flex; flex-direction: column; gap: 2rem; }
+        .prose-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: 0.875rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .prose-section p { font-size: 0.875rem; color: var(--ink-2); line-height: 1.85; margin-bottom: 0.75rem; }
+        .prose-section p:last-child { margin-bottom: 0; }
+        .prose-section ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0; margin-top: 0.5rem; }
+        .prose-section li { font-size: 0.875rem; color: var(--ink-2); line-height: 1.7; padding-left: 1.25rem; position: relative; }
+        .prose-section li::before { content: '·'; position: absolute; left: 0.25rem; color: var(--accent); font-weight: 700; }
+        .prose-section a { color: var(--accent); text-decoration: underline; }
+        .prose-section a:hover { color: var(--accent-h); }
+        .highlight-box { background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem 1.25rem; margin-top: 0.75rem; }
+        .highlight-box p { font-size: 0.82rem !important; margin-bottom: 0 !important; }
+
+        .page-footer { background: var(--ink); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600; letter-spacing: 0.1em; color: rgba(250,248,244,0.5); }
+        .footer-copy { font-size: 0.66rem; color: rgba(250,248,244,0.25); }
+
+        @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        body { animation: pageIn 0.35s ease both; }
+    </style>
+</head>
+<body>
+
+<nav class="topnav">
+    <a href="/" class="topnav-logo">💹 금융 도구</a>
+    <a href="/" class="topnav-link">홈</a>
+    <a href="/backtest.html?tab=backtest" class="topnav-link">백테스트</a>
+    <a href="/backtest.html?tab=compound" class="topnav-link">복리 계산기</a>
+</nav>
+
+<div class="page-wrap">
+    <div class="page-header">
+        <div class="header-badge">Legal</div>
+        <h1>개인정보처리방침</h1>
+        <div class="updated">최종 업데이트: 2026년 6월 15일</div>
+    </div>
+
+    <div class="prose">
+
+        <div class="prose-section">
+            <h2>1. 개요</h2>
+            <p>본 개인정보처리방침은 금융 도구 서비스(이하 "서비스")가 수집하는 정보와 그 사용 방식을 설명합니다. 서비스를 이용함으로써 본 방침에 동의한 것으로 간주됩니다.</p>
+            <p>본 서비스는 Yahoo Finance API를 통해 금융 데이터를 조회하는 무료 분석 도구입니다. 별도의 회원가입이나 로그인이 필요하지 않으며, 사용자의 개인 정보를 서버에 수집·저장하지 않습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>2. 수집하는 정보</h2>
+            <p>본 서비스는 사용자의 개인 식별 정보를 직접 수집하지 않습니다. 그러나 서비스 운영 과정에서 다음과 같은 데이터가 자동으로 처리될 수 있습니다.</p>
+            <ul>
+                <li><strong>브라우저 로컬 스토리지:</strong> 마지막으로 선택한 탭 정보가 사용자 기기의 로컬 스토리지에 저장됩니다. 이 데이터는 서버로 전송되지 않으며 사용자만 접근할 수 있습니다.</li>
+                <li><strong>접속 로그:</strong> 서비스 제공자(Cloudflare Pages)의 서버 로그에 IP 주소, 접속 시간, 요청 URL 등이 자동으로 기록될 수 있습니다.</li>
+                <li><strong>쿠키:</strong> 광고 서비스(Google AdSense)가 활성화된 경우, 광고 개인화를 위해 쿠키가 사용될 수 있습니다.</li>
+            </ul>
+        </div>
+
+        <div class="prose-section">
+            <h2>3. 제3자 서비스</h2>
+            <p>본 서비스는 기능 제공을 위해 다음 제3자 서비스를 사용합니다. 각 서비스의 개인정보처리방침을 확인하시기 바랍니다.</p>
+            <ul>
+                <li><strong>Yahoo Finance API:</strong> 주식·ETF·암호화폐 가격 데이터 제공. 사용자가 입력한 종목 심볼이 Yahoo Finance 서버로 전달됩니다. (<a href="https://legal.yahoo.com/us/en/yahoo/privacy/index.html" target="_blank" rel="noopener">Yahoo 개인정보처리방침</a>)</li>
+                <li><strong>Google Fonts:</strong> 웹 폰트 제공을 위해 Google 서버에 요청이 전송됩니다. (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 개인정보처리방침</a>)</li>
+                <li><strong>Chart.js (jsDelivr CDN):</strong> 차트 라이브러리 제공을 위해 jsDelivr CDN 서버를 사용합니다.</li>
+                <li><strong>Flatpickr (jsDelivr CDN):</strong> 날짜 선택 UI 제공을 위해 jsDelivr CDN 서버를 사용합니다.</li>
+                <li><strong>Cloudflare Pages:</strong> 서비스 호스팅 플랫폼. (<a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare 개인정보처리방침</a>)</li>
+            </ul>
+        </div>
+
+        <div class="prose-section">
+            <h2>4. Google AdSense 및 광고</h2>
+            <p>본 서비스는 Google AdSense를 통해 광고를 게재할 수 있습니다. Google AdSense는 사용자의 관심사에 맞는 광고를 표시하기 위해 쿠키를 사용합니다.</p>
+            <div class="highlight-box">
+                <p>Google의 광고 쿠키 사용 방식에 대한 자세한 내용은 <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google 광고 정책 페이지</a>를 참조하세요. 또한 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google 광고 설정</a>에서 광고 개인화를 해제할 수 있습니다.</p>
+            </div>
+            <p>Google은 DoubleClick 쿠키를 통해 사용자가 본 서비스 및 인터넷의 다른 사이트를 방문할 때 광고를 제공합니다. 사용자는 <a href="http://www.networkadvertising.org/managing/opt_out.asp" target="_blank" rel="noopener">Network Advertising Initiative 옵트아웃 페이지</a>를 통해 쿠키 기반 광고를 비활성화할 수 있습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>5. 쿠키 정책</h2>
+            <p>쿠키는 웹사이트가 사용자의 브라우저에 저장하는 소량의 데이터 파일입니다. 본 서비스는 다음 목적으로 쿠키 또는 유사한 기술을 사용합니다.</p>
+            <ul>
+                <li><strong>기능성 쿠키:</strong> 마지막 활성 탭 등 사용자 기본 설정을 저장합니다. (로컬 스토리지 방식)</li>
+                <li><strong>광고 쿠키:</strong> Google AdSense가 관련성 있는 광고를 게재하기 위해 사용합니다.</li>
+            </ul>
+            <p>브라우저 설정에서 쿠키를 비활성화할 수 있으나, 일부 서비스 기능이 정상 작동하지 않을 수 있습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>6. 데이터 보안</h2>
+            <p>본 서비스는 사용자의 개인 정보를 자체 서버에 저장하지 않습니다. 모든 금융 계산은 사용자의 브라우저에서 실행되며, Yahoo Finance API 조회 시 종목 심볼만 전달됩니다.</p>
+            <p>그러나 인터넷을 통한 데이터 전송이나 전자적 저장 방식은 100% 안전을 보장하지 않으므로, 완전한 보안을 보장할 수 없습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>7. 아동 개인정보 보호</h2>
+            <p>본 서비스는 만 14세 미만 아동을 대상으로 하지 않으며, 아동의 개인 정보를 의도적으로 수집하지 않습니다. 만약 만 14세 미만 아동의 개인 정보가 수집된 사실을 인지하게 될 경우 즉시 삭제 조치를 취합니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>8. 면책조항</h2>
+            <p>본 서비스에서 제공하는 모든 금융 데이터와 계산 결과는 정보 제공 목적으로만 사용되어야 합니다. 본 서비스는 투자 권유를 위한 서비스가 아니며, 제공된 정보에 근거한 투자 결정에 대한 책임을 지지 않습니다.</p>
+            <p>과거의 수익률이 미래의 수익률을 보장하지 않습니다. 모든 투자에는 원금 손실의 위험이 있습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>9. 개인정보처리방침 변경</h2>
+            <p>본 개인정보처리방침은 법률 변경이나 서비스 업데이트에 따라 수시로 변경될 수 있습니다. 변경 사항은 본 페이지에 최신 업데이트 날짜와 함께 게시됩니다. 서비스를 지속적으로 이용함으로써 변경된 방침에 동의한 것으로 간주됩니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>10. 문의</h2>
+            <p>본 개인정보처리방침에 관한 문의 사항이 있으신 경우 아래 이메일로 연락해 주시기 바랍니다.</p>
+            <div class="highlight-box">
+                <p>📧 이메일: <a href="mailto:limkh930724@gmail.com">limkh930724@gmail.com</a></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="page-footer">
+    <span class="footer-brand">💹 금융 도구</span>
+    <span class="footer-copy">© 2026 · <a href="/" style="color:rgba(250,248,244,0.35);text-decoration:none">홈으로 돌아가기</a></span>
+</footer>
+
+</body>
+</html>

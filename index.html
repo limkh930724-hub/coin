@@ -304,34 +304,60 @@
             .page-footer { flex-direction: column; gap: 0.3rem; text-align: center; }
         }
 
-        /* ── 팁 박스 ── */
-        .tip-box {
-            margin-bottom: 1.25rem;
-            border: 1px solid rgba(200,146,58,0.28);
-            border-radius: 9px;
-            background: rgba(200,146,58,0.05);
+        /* ── 팁 팝업 ── */
+        .card-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .card-title-row .card-title { margin-bottom: 0; }
+        .tip-btn {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.28rem 0.7rem; border-radius: 20px;
+            border: 1px solid rgba(200,146,58,0.35);
+            background: rgba(200,146,58,0.07);
+            font-family: inherit; font-size: 0.71rem; font-weight: 600;
+            color: var(--accent-h); cursor: pointer; white-space: nowrap;
+            transition: all 0.15s;
+        }
+        .tip-btn:hover { background: rgba(200,146,58,0.15); border-color: var(--accent); }
+        .tip-popup-wrap { position: relative; }
+        .tip-popup {
+            display: none;
+            position: absolute; top: calc(100% + 8px); right: 0; z-index: 100;
+            width: min(360px, calc(100vw - 3rem));
+            background: var(--bg-2); border: 1px solid var(--border-2);
+            border-radius: 12px; box-shadow: 0 8px 32px rgba(26,21,16,0.14), 0 2px 8px rgba(26,21,16,0.08);
             overflow: hidden;
+            animation: tipIn 0.18s cubic-bezier(0.22,1,0.36,1);
         }
-        .tip-toggle {
-            padding: 0.6rem 0.875rem;
-            font-size: 0.75rem; font-weight: 600;
-            color: var(--accent-h);
-            cursor: pointer; list-style: none;
-            display: flex; align-items: center; gap: 0.45rem;
-            user-select: none;
+        .tip-popup.open { display: block; }
+        @keyframes tipIn {
+            from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)   scale(1); }
         }
-        .tip-toggle::-webkit-details-marker { display: none; }
-        .tip-chevron { font-style: normal; font-size: 0.6rem; transition: transform 0.18s; display: inline-block; }
-        details[open] .tip-chevron { transform: rotate(90deg); }
-        .tip-content {
-            padding: 0 0.875rem 0.8rem;
-            border-top: 1px solid rgba(200,146,58,0.15);
+        .tip-popup-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem 1rem 0.6rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #FBF7F0 0%, #FAF8F4 100%);
         }
-        .tip-content ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.65rem; }
-        .tip-content li { font-size: 0.77rem; color: var(--ink-2); line-height: 1.55; padding-left: 1.1rem; position: relative; }
-        .tip-content li::before { content: '·'; position: absolute; left: 0.2rem; color: var(--accent); font-weight: 700; font-size: 1rem; line-height: 1.2; }
-        .tip-content li strong { color: var(--ink); font-weight: 600; }
-        .tip-content li code { font-family: 'Menlo', 'Consolas', monospace; background: rgba(200,146,58,0.12); color: var(--accent-h); padding: 1px 5px; border-radius: 4px; font-size: 0.73rem; }
+        .tip-popup-head-label { font-size: 0.72rem; font-weight: 700; color: var(--accent-h); letter-spacing: 0.05em; }
+        .tip-close {
+            background: none; border: none; cursor: pointer;
+            color: var(--ink-3); font-size: 0.85rem; line-height: 1;
+            padding: 2px 5px; border-radius: 4px; transition: color 0.12s;
+        }
+        .tip-close:hover { color: var(--ink); }
+        .tip-popup-body { padding: 0.75rem 1rem 0.875rem; }
+        .tip-popup-body ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        .tip-popup-body li { font-size: 0.78rem; color: var(--ink-2); line-height: 1.6; padding-left: 1rem; position: relative; }
+        .tip-popup-body li::before { content: '·'; position: absolute; left: 0.1rem; color: var(--accent); font-weight: 700; font-size: 1rem; line-height: 1.25; }
+        .tip-popup-body li strong { color: var(--ink); font-weight: 600; }
+        .tip-popup-body li code { font-family: 'Menlo', 'Consolas', monospace; background: rgba(200,146,58,0.12); color: var(--accent-h); padding: 1px 5px; border-radius: 4px; font-size: 0.72rem; }
+        .tip-example { margin-top: 0.6rem; padding: 0.6rem 0.75rem; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border); }
+        .tip-example-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin-bottom: 0.35rem; }
+        .tip-example-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+        .tip-tag { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px; background: var(--bg-2); border: 1px solid var(--border-2); color: var(--ink-2); }
+        .tip-tag.a { border-color: #C8A87A; color: #7A5828; }
+        .tip-tag.b { border-color: var(--accent); color: var(--accent-h); }
+        .tip-tag.c { border-color: #5A9A72; color: #3A6A50; }
 
         @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
         body { animation: pageIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -367,21 +393,35 @@
     <div class="tool-panel" data-panel="backtest">
 
         <div class="card">
-            <div class="card-title">투자 조건 설정</div>
-
-            <!-- 백테스트 팁 -->
-            <details class="tip-box">
-                <summary class="tip-toggle"><span class="tip-chevron">▶</span> 💡 사용 팁</summary>
-                <div class="tip-content">
-                    <ul>
-                        <li><strong>종목 심볼 입력:</strong> 미국 주식·ETF는 <code>SPY</code> <code>AAPL</code> <code>QQQ</code>, 한국 주식은 <code>005930.KS</code>(삼성전자), 암호화폐는 <code>BTC-USD</code> 형식으로 입력하세요.</li>
-                        <li><strong>일괄투자 vs 적립식:</strong> 일괄투자(Lump Sum)는 시작일에 전액 투자, 적립식(DCA)은 매월 첫 거래일에 같은 금액을 분할 투자합니다.</li>
-                        <li><strong>CAGR (연평균 복합 성장률):</strong> 투자 기간이 다를 때 공정하게 비교할 수 있는 지표입니다. 숫자가 높을수록 연평균 수익이 높다는 의미입니다.</li>
-                        <li><strong>날짜 직접 선택:</strong> 달력에서 날짜 범위를 선택하면 기간 버튼(1Y·3Y 등)은 자동으로 해제됩니다.</li>
-                        <li><strong>종목 C 추가:</strong> "종목 C 추가하기" 버튼으로 최대 3개 종목을 동시에 비교할 수 있습니다.</li>
-                    </ul>
+            <div class="card-title-row">
+                <div class="card-title">투자 조건 설정</div>
+                <div class="tip-popup-wrap">
+                    <button class="tip-btn" onclick="toggleTip('tip-backtest')" type="button">💡 사용 팁</button>
+                    <div class="tip-popup" id="tip-backtest">
+                        <div class="tip-popup-head">
+                            <span class="tip-popup-head-label">💡 백테스트 비교기 사용법</span>
+                            <button class="tip-close" onclick="closeTip('tip-backtest')" type="button">✕</button>
+                        </div>
+                        <div class="tip-popup-body">
+                            <ul>
+                                <li><strong>기본 2종목 비교</strong> — 종목 A·B에 심볼을 입력하고 금액·기간을 설정한 뒤 "비교 시작"을 누르세요.</li>
+                                <li><strong>거치식 vs 적립식</strong> — 거치식(Lump Sum)은 시작일 전액 투자, 적립식(DCA)은 매월 동일 금액을 분할 투자합니다.</li>
+                                <li><strong>종목 C 추가</strong> — "＋ 종목 C 추가하기"로 3종목 동시 비교가 가능합니다. 레버리지 ETF 비교에 유용합니다.</li>
+                                <li><strong>심볼 형식</strong> — 미국: <code>SPY</code> <code>AAPL</code>, 한국: <code>005930.KS</code>, 암호화폐: <code>BTC-USD</code></li>
+                                <li><strong>CAGR</strong> — 연평균 복합 성장률. 기간이 달라도 수익률을 공정하게 비교할 수 있는 지표입니다.</li>
+                            </ul>
+                            <div class="tip-example">
+                                <div class="tip-example-label">레버리지 비교 예시</div>
+                                <div class="tip-example-tags">
+                                    <span class="tip-tag a">QQQ <small style="opacity:.6">나스닥 1배</small></span>
+                                    <span class="tip-tag b">QLD <small style="opacity:.6">나스닥 2배</small></span>
+                                    <span class="tip-tag c">TQQQ <small style="opacity:.6">나스닥 3배</small></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </details>
+            </div>
 
             <div class="sym-grid" id="sym-ab-grid" style="margin-bottom:1.25rem">
                 <div class="sym-block a">
@@ -530,21 +570,27 @@
     ════════════════════════════════ -->
     <div class="tool-panel" data-panel="compound">
         <div class="card">
-            <div class="card-title">투자 조건</div>
-
-            <!-- 복리 계산기 팁 -->
-            <details class="tip-box">
-                <summary class="tip-toggle"><span class="tip-chevron">▶</span> 💡 사용 팁</summary>
-                <div class="tip-content">
-                    <ul>
-                        <li><strong>초기 투자금:</strong> 처음에 넣는 원금입니다. <code>0</code>으로 설정하면 매년 추가 투자금만으로 계산합니다.</li>
-                        <li><strong>연간 투자금:</strong> 매년 추가로 투자하는 금액입니다. <code>0</code>으로 설정하면 초기 원금의 순수 복리만 계산합니다.</li>
-                        <li><strong>연 수익률 기준:</strong> S&amp;P 500의 역사적 연평균 수익률은 약 <strong>7~10%</strong>입니다. 보수적 시나리오는 5%, 공격적 시나리오는 12~15%로 설정해보세요.</li>
-                        <li><strong>복리 vs 단리 차이:</strong> 그래프에서 파란 곡선(복리)과 하늘색 선(단리)의 격차가 커질수록 복리 효과가 강력합니다. 기간이 길수록 차이가 극적으로 벌어집니다.</li>
-                        <li><strong>진행 바 해석:</strong> 금색 영역이 수익, 회색 영역이 원금 비율입니다. 수익 비율이 높을수록 복리 효과가 잘 발휘되고 있다는 의미입니다.</li>
-                    </ul>
+            <div class="card-title-row">
+                <div class="card-title">투자 조건</div>
+                <div class="tip-popup-wrap">
+                    <button class="tip-btn" onclick="toggleTip('tip-compound')" type="button">💡 사용 팁</button>
+                    <div class="tip-popup" id="tip-compound">
+                        <div class="tip-popup-head">
+                            <span class="tip-popup-head-label">💡 복리 계산기 사용법</span>
+                            <button class="tip-close" onclick="closeTip('tip-compound')" type="button">✕</button>
+                        </div>
+                        <div class="tip-popup-body">
+                            <ul>
+                                <li><strong>초기 투자금</strong> — 처음 넣는 원금. <code>0</code>으로 설정하면 적립금만으로 계산합니다.</li>
+                                <li><strong>연간 투자금</strong> — 매년 추가 투자 금액. <code>0</code>이면 거치식 단순 복리만 계산합니다.</li>
+                                <li><strong>수익률 참고값</strong> — S&amp;P 500 역사적 평균 약 <strong>7~10%</strong> / 보수적 5% / 공격적 12~15%</li>
+                                <li><strong>그래프 읽기</strong> — 파란 곡선(복리)과 하늘색 선(단리)의 격차가 클수록 복리 효과가 큽니다. 기간이 길수록 차이가 극적으로 벌어집니다.</li>
+                                <li><strong>진행 바</strong> — 금색이 수익, 회색이 원금 비율. 금색 영역이 넓을수록 복리가 잘 작동하고 있다는 신호입니다.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </details>
+            </div>
 
             <div class="slider-row">
                 <span class="slider-label">초기 투자금</span>
@@ -599,6 +645,24 @@
 </footer>
 
 <script>
+// ── 팁 팝업 ──
+function toggleTip(id) {
+    const popup = document.getElementById(id);
+    const isOpen = popup.classList.contains('open');
+    // 다른 팝업 모두 닫기
+    document.querySelectorAll('.tip-popup.open').forEach(p => p.classList.remove('open'));
+    if (!isOpen) popup.classList.add('open');
+}
+function closeTip(id) {
+    document.getElementById(id).classList.remove('open');
+}
+// 팝업 외부 클릭 시 닫기
+document.addEventListener('click', e => {
+    if (!e.target.closest('.tip-popup-wrap')) {
+        document.querySelectorAll('.tip-popup.open').forEach(p => p.classList.remove('open'));
+    }
+});
+
 const CORS_PROXY = '/api/proxy?url=';
 const ALLOWED_TABS = ['backtest', 'compound'];
 

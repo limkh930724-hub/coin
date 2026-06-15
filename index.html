@@ -490,19 +490,19 @@
             <div class="section-divider"></div>
 
             <div class="form-rows" style="margin-top:1.25rem">
-                <div class="amount-row">
-                    <div class="input-group">
-                        <label class="input-label" id="amount-label">투자금액</label>
-                        <input type="text" id="bt-amount" class="input-field" value="10,000,000" placeholder="예: 10,000,000">
-                    </div>
-                    <span class="amount-unit">원</span>
-                </div>
                 <div class="form-row">
                     <div class="input-label">투자방식</div>
                     <div class="radio-group">
-                        <label class="selected" id="lbl-lump"><input type="radio" name="invest-type" value="lump" checked><span>일괄투자</span></label>
-                        <label id="lbl-dca"><input type="radio" name="invest-type" value="dca"><span>적립식(월)</span></label>
+                        <label class="selected" id="lbl-dca"><input type="radio" name="invest-type" value="dca" checked><span>적립식(월)</span></label>
+                        <label id="lbl-lump"><input type="radio" name="invest-type" value="lump"><span>일괄투자</span></label>
                     </div>
+                </div>
+                <div class="amount-row">
+                    <div class="input-group">
+                        <label class="input-label" id="amount-label">월 투자금액</label>
+                        <input type="text" id="bt-amount" class="input-field" value="1,000,000" placeholder="예: 1,000,000">
+                    </div>
+                    <span class="amount-unit">원</span>
                 </div>
                 <div class="form-row">
                     <div class="input-label">비교 기간</div>

@@ -187,6 +187,23 @@
         .remove-sym-btn { float: right; background: none; border: none; color: var(--ink-3); font-size: 0.82rem; cursor: pointer; line-height: 1; padding: 0; transition: color 0.15s; }
         .remove-sym-btn:hover { color: var(--red); }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── 한국 주식 자동완성 ── */
+        .sym-input-wrap { position: relative; }
+        .sym-autocomplete {
+            display: none;
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px;
+            box-shadow: var(--sh-md); max-height: 230px; overflow-y: auto; z-index: 50;
+        }
+        .sym-autocomplete.show { display: block; }
+        .sym-autocomplete-item {
+            padding: 0.55rem 0.8rem; font-size: 0.82rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+        }
+        .sym-autocomplete-item:hover { background: var(--bg-3); }
+        .sym-autocomplete-item .ac-name { color: var(--ink); font-weight: 600; }
+        .sym-autocomplete-item .ac-ticker { color: var(--ink-3); font-size: 0.72rem; font-weight: 500; white-space: nowrap; }
         .sym-grid.has-c { grid-template-columns: 1fr 1fr 1fr; }
 
         .amount-row { display: flex; align-items: flex-end; gap: 0.5rem; }
@@ -468,7 +485,7 @@
                                 <li><strong>기본 2종목 비교</strong> — 종목 A·B에 심볼을 입력하고 금액·기간을 설정한 뒤 "비교 시작"을 누르세요.</li>
                                 <li><strong>거치식 vs 적립식</strong> — 거치식(Lump Sum)은 시작일 전액 투자, 적립식(DCA)은 매월 동일 금액을 분할 투자합니다.</li>
                                 <li><strong>종목 C 추가</strong> — "＋ 종목 C 추가하기"로 3종목 동시 비교가 가능합니다. 레버리지 ETF 비교에 유용합니다.</li>
-                                <li><strong>심볼 형식</strong> — 미국: <code>SPY</code> <code>AAPL</code>, 한국: <code>005930.KS</code>, 암호화폐: <code>BTC-USD</code></li>
+                                <li><strong>심볼 형식</strong> — 미국: <code>SPY</code> <code>AAPL</code>, 한국: <code>005930.KS</code> 또는 <strong>"삼성전자"</strong>처럼 한글로 입력하면 자동완성이 표시됩니다, 암호화폐: <code>BTC-USD</code></li>
                                 <li><strong>CAGR</strong> — 연평균 복합 성장률. 기간이 달라도 수익률을 공정하게 비교할 수 있는 지표입니다.</li>
                             </ul>
                             <div class="tip-example">
@@ -487,19 +504,28 @@
             <div class="sym-grid" id="sym-ab-grid" style="margin-bottom:1.25rem">
                 <div class="sym-block a">
                     <div class="sym-label">종목 A</div>
-                    <input type="text" id="sym-a" class="sym-input" value="SPY"
-                           placeholder="예: AAPL, 005930.KS" autocomplete="off" spellcheck="false">
+                    <div class="sym-input-wrap">
+                        <input type="text" id="sym-a" class="sym-input" value="SPY"
+                               placeholder="예: AAPL, 삼성전자" autocomplete="off" spellcheck="false">
+                        <div class="sym-autocomplete" id="ac-a"></div>
+                    </div>
                     <div class="sym-name-tag" id="name-a">· 입력 후 자동 조회</div>
                 </div>
                 <div class="sym-block b">
                     <div class="sym-label">종목 B</div>
-                    <input type="text" id="sym-b" class="sym-input" value="QQQ"
-                           placeholder="예: MSFT, BTC-USD" autocomplete="off" spellcheck="false">
+                    <div class="sym-input-wrap">
+                        <input type="text" id="sym-b" class="sym-input" value="QQQ"
+                               placeholder="예: BTC-USD, SK하이닉스" autocomplete="off" spellcheck="false">
+                        <div class="sym-autocomplete" id="ac-b"></div>
+                    </div>
                     <div class="sym-name-tag" id="name-b">· 입력 후 자동 조회</div>
                 </div>
                 <div id="sym-c-block" class="sym-block c" style="display:none">
                     <div class="sym-label">종목 C <button class="remove-sym-btn" onclick="hideSymC()" title="종목 C 제거">✕</button></div>
-                    <input type="text" id="sym-c" class="sym-input" placeholder="예: NVDA, TSLA" autocomplete="off" spellcheck="false">
+                    <div class="sym-input-wrap">
+                        <input type="text" id="sym-c" class="sym-input" placeholder="예: TSLA, 카카오" autocomplete="off" spellcheck="false">
+                        <div class="sym-autocomplete" id="ac-c"></div>
+                    </div>
                     <div class="sym-name-tag" id="name-c">· 입력 후 자동 조회</div>
                 </div>
             </div>
@@ -779,6 +805,98 @@ function initTabs() {
 // ══════════════════════════════════════════════
 //  백테스트
 // ══════════════════════════════════════════════
+const KR_STOCKS = [
+    { name: '삼성전자', ticker: '005930.KS' },
+    { name: 'SK하이닉스', ticker: '000660.KS' },
+    { name: 'LG에너지솔루션', ticker: '373220.KS' },
+    { name: '삼성바이오로직스', ticker: '207940.KS' },
+    { name: '현대차', ticker: '005380.KS' },
+    { name: '기아', ticker: '000270.KS' },
+    { name: '셀트리온', ticker: '068270.KS' },
+    { name: 'POSCO홀딩스', ticker: '005490.KS' },
+    { name: 'NAVER', ticker: '035420.KS' },
+    { name: '삼성SDI', ticker: '006400.KS' },
+    { name: 'LG화학', ticker: '051910.KS' },
+    { name: '카카오', ticker: '035720.KS' },
+    { name: 'KB금융', ticker: '105560.KS' },
+    { name: '신한지주', ticker: '055550.KS' },
+    { name: '현대모비스', ticker: '012330.KS' },
+    { name: '삼성물산', ticker: '028260.KS' },
+    { name: 'SK이노베이션', ticker: '096770.KS' },
+    { name: 'LG전자', ticker: '066570.KS' },
+    { name: '하나금융지주', ticker: '086790.KS' },
+    { name: '삼성생명', ticker: '032830.KS' },
+    { name: '한국전력', ticker: '015760.KS' },
+    { name: 'SK텔레콤', ticker: '017670.KS' },
+    { name: 'KT', ticker: '030200.KS' },
+    { name: '삼성화재', ticker: '000810.KS' },
+    { name: '포스코퓨처엠', ticker: '003670.KS' },
+    { name: '한미반도체', ticker: '042700.KS' },
+    { name: 'LG생활건강', ticker: '051900.KS' },
+    { name: '우리금융지주', ticker: '316140.KS' },
+    { name: '메리츠금융지주', ticker: '138040.KS' },
+    { name: '삼성전기', ticker: '009150.KS' },
+    { name: 'HD현대중공업', ticker: '329180.KS' },
+    { name: '두산에너빌리티', ticker: '034020.KS' },
+    { name: '한화에어로스페이스', ticker: '012450.KS' },
+    { name: 'SK', ticker: '034730.KS' },
+    { name: 'LG', ticker: '003550.KS' },
+    { name: '아모레퍼시픽', ticker: '090430.KS' },
+    { name: 'CJ제일제당', ticker: '097950.KS' },
+    { name: '카카오뱅크', ticker: '323410.KS' },
+    { name: '카카오페이', ticker: '377300.KS' },
+    { name: '크래프톤', ticker: '259960.KS' },
+    { name: '엔씨소프트', ticker: '036570.KS' },
+    { name: '넷마블', ticker: '251270.KS' },
+    { name: '코웨이', ticker: '021240.KS' },
+    { name: '에코프로', ticker: '086520.KQ' },
+    { name: '에코프로비엠', ticker: '247540.KQ' },
+    { name: '리노공업', ticker: '058470.KQ' },
+    { name: '알테오젠', ticker: '196170.KQ' },
+    { name: 'HLB', ticker: '028300.KQ' },
+    { name: '펄어비스', ticker: '263750.KQ' },
+];
+
+function krNameFromTicker(ticker) {
+    const t = (ticker || '').trim().toUpperCase();
+    const found = KR_STOCKS.find(s => s.ticker.toUpperCase() === t);
+    return found ? found.name : ticker;
+}
+
+function setupKrAutocomplete(inputId, dropdownId) {
+    const input = document.getElementById(inputId);
+    const dropdown = document.getElementById(dropdownId);
+
+    function hide() {
+        dropdown.classList.remove('show');
+        dropdown.innerHTML = '';
+    }
+
+    function showMatches(query) {
+        const q = query.trim();
+        if (!q) return hide();
+        const matches = KR_STOCKS.filter(s => s.name.includes(q)).slice(0, 8);
+        if (!matches.length) return hide();
+        dropdown.innerHTML = matches.map(s =>
+            `<div class="sym-autocomplete-item" data-ticker="${s.ticker}"><span class="ac-name">${s.name}</span><span class="ac-ticker">${s.ticker}</span></div>`
+        ).join('');
+        dropdown.classList.add('show');
+    }
+
+    input.addEventListener('input', () => showMatches(input.value));
+    input.addEventListener('focus', () => { if (input.value) showMatches(input.value); });
+    input.addEventListener('blur', hide);
+
+    dropdown.addEventListener('mousedown', (e) => {
+        const item = e.target.closest('.sym-autocomplete-item');
+        if (!item) return;
+        e.preventDefault();
+        input.value = item.dataset.ticker;
+        hide();
+        input.dispatchEvent(new Event('blur'));
+    });
+}
+
 async function fetchSymbolName(sym) {
     try {
         const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1d&interval=1d`;
@@ -810,6 +928,10 @@ function setupSymbolLookup(inputId, nameId) {
 setupSymbolLookup('sym-a', 'name-a');
 setupSymbolLookup('sym-b', 'name-b');
 setupSymbolLookup('sym-c', 'name-c');
+
+setupKrAutocomplete('sym-a', 'ac-a');
+setupKrAutocomplete('sym-b', 'ac-b');
+setupKrAutocomplete('sym-c', 'ac-c');
 
 function showSymC() {
     document.getElementById('add-sym-c-btn').style.display = 'none';
@@ -917,7 +1039,7 @@ function renderSummaryCards(symA, nameA, resA, symB, nameB, resB, symC, nameC, r
     function fill(prefix, sym, name, res) {
         const isWinner = res.cumulReturn === maxRet;
         document.getElementById(`card-${prefix}`).classList.toggle('winner', isWinner);
-        document.getElementById(`sym-label-${prefix}`).textContent = sym;
+        document.getElementById(`sym-label-${prefix}`).textContent = krNameFromTicker(sym);
         document.getElementById(`corp-${prefix}`).textContent = name || '';
         document.getElementById(`badge-${prefix}`).style.display = isWinner ? '' : 'none';
         const retEl = document.getElementById(`ret-${prefix}`);
@@ -948,12 +1070,12 @@ function renderSummaryCards(symA, nameA, resA, symB, nameB, resB, symC, nameC, r
 
 function renderTable(symA, resA, symB, resB, symC, resC) {
     const hasC = !!resC;
-    document.getElementById('th-a-text').textContent = symA;
-    document.getElementById('th-b-text').textContent = symB;
+    document.getElementById('th-a-text').textContent = krNameFromTicker(symA);
+    document.getElementById('th-b-text').textContent = krNameFromTicker(symB);
     ['th-c','tc-ret-c','tc-inv-c','tc-val-c','tc-cagr-c'].forEach(id => {
         document.getElementById(id).style.display = hasC ? '' : 'none';
     });
-    if (hasC) { document.getElementById('th-c-text').textContent = symC; document.getElementById('tc-period').colSpan = 4; }
+    if (hasC) { document.getElementById('th-c-text').textContent = krNameFromTicker(symC); document.getElementById('tc-period').colSpan = 4; }
     else document.getElementById('tc-period').colSpan = 3;
 
     const allRes = hasC ? [resA, resB, resC] : [resA, resB];
@@ -1006,10 +1128,10 @@ function renderChart(dates, resA, resB, symA, symB, mode, resC, symC) {
         return Array.from({ length: 500 }, (_, i) => arr[Math.round(i * step)]);
     }
     const datasets = [
-        { label: symA, data: downsample(isReturns ? resA.returns : resA.values), borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
-        { label: symB, data: downsample(isReturns ? resB.returns : resB.values), borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 }
+        { label: krNameFromTicker(symA), data: downsample(isReturns ? resA.returns : resA.values), borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
+        { label: krNameFromTicker(symB), data: downsample(isReturns ? resB.returns : resB.values), borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 }
     ];
-    if (resC) datasets.push({ label: symC, data: downsample(isReturns ? resC.returns : resC.values), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 });
+    if (resC) datasets.push({ label: krNameFromTicker(symC), data: downsample(isReturns ? resC.returns : resC.values), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 });
     const ctx = document.getElementById('btChart').getContext('2d');
     btChartInstance = new Chart(ctx, {
         type: 'line',

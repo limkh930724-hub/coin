@@ -247,28 +247,29 @@
         .status-box.error { color: var(--red); }
 
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+        .summary-grid.has-c { grid-template-columns: 1fr 1fr 1fr; }
         .summary-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--sh-sm); }
-        .summary-card-header { padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--border); position: relative; }
+        .summary-card-header { padding: 0.875rem 1.05rem 0.7rem; border-bottom: 1px solid var(--border); position: relative; }
         .summary-card.a .summary-card-header { border-top: 3px solid #8A6840; }
         .summary-card.b .summary-card-header { border-top: 3px solid var(--accent); }
         .summary-card.c .summary-card-header { border-top: 3px solid var(--green); }
         .summary-card.winner .summary-card-header { background: linear-gradient(135deg, #FBF7F0 0%, #FAF8F4 100%); }
-        .summary-sym { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.01em; color: var(--ink); }
-        .summary-corp { font-size: 0.73rem; font-weight: 500; color: var(--ink-3); margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #badge-a, #badge-b, #badge-c { position: absolute; top: 1rem; right: 1rem; }
-        .summary-badge { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.64rem; font-weight: 700; background: var(--accent); color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px; }
-        .summary-hero { display: flex; align-items: baseline; gap: 0.4rem; margin-top: 0.75rem; }
-        .summary-hero-num { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+        .summary-sym { font-size: 0.91rem; font-weight: 700; letter-spacing: 0.01em; color: var(--ink); }
+        .summary-corp { font-size: 0.51rem; font-weight: 500; color: var(--ink-3); margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #badge-a, #badge-b, #badge-c { position: absolute; top: 0.7rem; right: 0.7rem; }
+        .summary-badge { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.45rem; font-weight: 700; background: var(--accent); color: #fff; padding: 0.14rem 0.42rem; border-radius: 20px; }
+        .summary-hero { display: flex; align-items: baseline; gap: 0.4rem; margin-top: 0.525rem; }
+        .summary-hero-num { font-size: 1.47rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
         .summary-hero-num.pos { color: var(--green); }
         .summary-hero-num.neg { color: var(--red); }
-        .summary-hero-label { font-size: 0.7rem; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; }
-        .summary-metrics { padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.7rem; }
+        .summary-hero-label { font-size: 0.49rem; font-weight: 500; color: var(--ink-3); letter-spacing: 0.04em; }
+        .summary-metrics { padding: 0.7rem 1.05rem; display: flex; flex-direction: column; gap: 0.49rem; }
         .summary-metric { display: flex; justify-content: space-between; align-items: center; }
-        .summary-metric-label { font-size: 0.74rem; color: var(--ink-3); font-weight: 500; }
-        .summary-metric-value { font-size: 0.92rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+        .summary-metric-label { font-size: 0.52rem; color: var(--ink-3); font-weight: 500; }
+        .summary-metric-value { font-size: 0.64rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
         .summary-metric-value.pos { color: var(--green); }
         .summary-metric-value.neg { color: var(--red); }
-        .summary-metric-value.muted { color: var(--ink-2); font-weight: 500; font-size: 0.86rem; }
+        .summary-metric-value.muted { color: var(--ink-2); font-weight: 500; font-size: 0.6rem; }
 
         .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
         .chart-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); }
@@ -324,8 +325,8 @@
             .main-tab-btn .tab-emoji { display: none; }
             .sym-grid { grid-template-columns: 1fr; }
             .sym-grid.has-c { grid-template-columns: 1fr; }
-            .summary-grid { grid-template-columns: 1fr; }
-            .summary-hero-num { font-size: 1.75rem; }
+            .summary-grid, .summary-grid.has-c { grid-template-columns: 1fr; }
+            .summary-hero-num { font-size: 1.22rem; }
             .comp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .comp-table { font-size: 0.76rem; }
             .comp-table th, .comp-table td { padding: 0.6rem 0.5rem; white-space: nowrap; }
@@ -1063,10 +1064,10 @@ function renderSummaryCards(symA, nameA, resA, symB, nameB, resB, symC, nameC, r
     if (hasC) {
         fill('c', symC, nameC, resC);
         cardC.style.display = '';
-        summaryGrid.style.gridTemplateColumns = '1fr 1fr 1fr';
+        summaryGrid.classList.add('has-c');
     } else {
         cardC.style.display = 'none';
-        summaryGrid.style.gridTemplateColumns = '';
+        summaryGrid.classList.remove('has-c');
     }
 }
 

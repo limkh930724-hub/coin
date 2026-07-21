@@ -290,6 +290,7 @@
         .comp-table .diff.pos { color: var(--green); }
         .comp-table .diff.neg { color: var(--red); }
         .comp-table .sym-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+        #tc-period { white-space: normal; line-height: 1.4; }
 
         /* ── 복리 계산기 전용 ── */
         .slider-row { display: flex; align-items: center; gap: 0.95rem; margin-bottom: 1.1rem; }
@@ -330,6 +331,8 @@
             .comp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .comp-table { font-size: 0.76rem; }
             .comp-table th, .comp-table td { padding: 0.6rem 0.5rem; white-space: nowrap; }
+            .comp-table.has-c { font-size: 0.66rem; }
+            .comp-table.has-c th, .comp-table.has-c td { padding: 0.5rem 0.3rem; }
             .stats-grid.four { grid-template-columns: repeat(2, 1fr); }
             .slider-row { flex-wrap: wrap; gap: 0.3rem 0.5rem; }
             .slider-label { width: auto; flex: 1; font-size: 0.74rem; order: 1; }
@@ -1080,6 +1083,7 @@ function renderTable(symA, resA, symB, resB, symC, resC) {
     });
     if (hasC) { document.getElementById('th-c-text').textContent = krNameFromTicker(symC); document.getElementById('tc-period').colSpan = 4; }
     else document.getElementById('tc-period').colSpan = 3;
+    document.querySelector('.comp-table').classList.toggle('has-c', hasC);
 
     const allRes = hasC ? [resA, resB, resC] : [resA, resB];
     const sorted = [...allRes].sort((a, b) => b.cumulReturn - a.cumulReturn);

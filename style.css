@@ -3,7 +3,7 @@
    모든 HTML 페이지가 이 파일 하나를 씁니다. 색·타이포·간격은 여기서만 고칩니다.
 
    디자인 시스템: shadcn/ui 기본값을 따릅니다.
-   - 중성 회색(zinc) 팔레트, 검정 solid 버튼, radius 8px, 그림자 거의 없음
+   - 중성 회색(zinc) 팔레트 + 파랑 강조색, radius 14px, 은은한 층 그림자
    - 버튼은 solid / outline / ghost 세 가지 변형
    - 색은 데이터에만 씁니다: 종목 시리즈(--s1~3), 손익(--pos/--neg), 링크
    ========================================================================== */
@@ -11,6 +11,7 @@
 :root {
     /* 표면 */
     --bg:          #FFFFFF;
+    --bg-page:     #FAFAFA;   /* 페이지 바탕 — 흰 카드가 떠 보이도록 */
     --surface:     #F4F4F5;   /* muted — 표 헤더, 탭 트랙 */
     --surface-2:   #FAFAFA;   /* hover */
     /* 글자 */
@@ -22,8 +23,10 @@
     --primary-h:   #27272A;
     --primary-fg:  #FAFAFA;
     /* 링크·포커스 */
-    --accent:      #0F62D0;
-    --ring:        #A1A1AA;
+    --accent:      #2563EB;
+    --accent-s:    #EFF6FF;   /* 강조색 연한 배경 */
+    --accent-b:    #BFDBFE;
+    --ring:        #93B4F7;
     /* 손익 */
     --pos:         #15803D;
     --neg:         #DC2626;
@@ -35,11 +38,13 @@
     --border:      #E4E4E7;
     --border-2:    #D4D4D8;
     /* 그림자 — 떠 있는 요소에만. 평면 요소는 테두리로 구분합니다 */
-    --sh-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --sh-md: 0 10px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.05);
+    --sh-sm: 0 1px 2px rgba(9,9,11,0.04), 0 1px 3px rgba(9,9,11,0.05);
+    --sh-md: 0 12px 28px rgba(9,9,11,0.10), 0 4px 10px rgba(9,9,11,0.05);
+    --sh-btn: 0 1px 2px rgba(9,9,11,0.18), 0 2px 6px rgba(9,9,11,0.12);
+    --sh-lift: 0 4px 12px rgba(9,9,11,0.08), 0 2px 4px rgba(9,9,11,0.05);
     /* 반경 — shadcn --radius: 0.5rem */
-    --r:      8px;
-    --r-sm:   6px;
+    --r:      14px;   /* 카드·표·팝오버 */
+    --r-sm:   10px;   /* 입력창·작은 버튼 */
     --r-pill: 999px;
 }
 
@@ -50,7 +55,7 @@ html { -webkit-text-size-adjust: 100%; }
 body {
     font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
                  system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    background: var(--bg);
+    background: var(--bg-page);
     color: var(--ink);
     font-size: 16px;
     line-height: 1.6;
@@ -77,20 +82,27 @@ a { color: var(--accent); }
 .main-tab-btn, .radio-group label {
     font-family: inherit; font-weight: 500;
     border-radius: var(--r-sm); cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    transition: background 0.18s, border-color 0.18s, color 0.18s,
+                box-shadow 0.18s, transform 0.12s;
 }
 
 /* solid */
 .run-btn, .back-cta a {
-    background: var(--primary); color: var(--primary-fg); border: none;
-    font-size: 0.9375rem;
+    background: linear-gradient(180deg, #2B2B30 0%, var(--primary) 100%);
+    color: var(--primary-fg); border: none;
+    font-size: 0.9375rem; box-shadow: var(--sh-btn);
 }
-.run-btn:hover, .back-cta a:hover { background: var(--primary-h); }
+.run-btn:hover, .back-cta a:hover {
+    background: linear-gradient(180deg, #3A3A41 0%, var(--primary-h) 100%);
+    transform: translateY(-1px);
+}
+.run-btn:active, .back-cta a:active { transform: translateY(0); box-shadow: var(--sh-sm); }
 .run-btn {
     width: 100%; margin-top: 1.5rem; padding: 0 1.25rem;
     height: 44px; border-radius: var(--r);
 }
-.run-btn:disabled { background: var(--surface); color: var(--ink-3); cursor: not-allowed; }
+.run-btn:disabled { background: var(--surface); color: var(--ink-3); cursor: not-allowed;
+    box-shadow: none; transform: none; }
 .back-cta { margin-top: 3rem; }
 .back-cta a {
     display: inline-flex; align-items: center; height: 44px;
@@ -99,7 +111,7 @@ a { color: var(--accent); }
 
 /* outline */
 .period-btn {
-    height: 36px; padding: 0 0.875rem;
+    height: 36px; padding: 0 1rem; border-radius: var(--r-pill);
     border: 1px solid var(--border-2); background: var(--bg);
     font-size: 0.875rem; color: var(--ink-2);
 }
@@ -133,8 +145,8 @@ a { color: var(--accent); }
 /* ── 네비게이션 ─────────────────────────────────────────────────────────── */
 .topnav {
     position: sticky; top: 0; z-index: 200;
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(250,250,250,0.82);
+    backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; gap: 0.25rem;
     height: 56px; padding: 0 max(1.25rem, env(safe-area-inset-left));
@@ -161,8 +173,9 @@ a { color: var(--accent); }
 
 .page-header { margin-bottom: 2.5rem; }
 .header-badge {
-    display: inline-block; font-size: 0.8125rem; font-weight: 500;
-    color: var(--ink-3); margin-bottom: 0.6rem;
+    display: inline-flex; align-items: center; font-size: 0.75rem; font-weight: 600;
+    color: var(--accent); background: var(--accent-s);
+    padding: 0.3rem 0.7rem; border-radius: var(--r-pill); margin-bottom: 0.875rem;
 }
 .page-header h1 {
     font-size: clamp(1.875rem, 5vw, 3rem); font-weight: 700;
@@ -181,8 +194,9 @@ a { color: var(--accent); }
    메인 탭 · 투자 방식 · 차트 전환이 모두 같은 구조를 씁니다. */
 .main-tabs, .radio-group, .chart-tabs {
     display: flex; gap: 2px; padding: 4px;
-    background: var(--surface); border-radius: var(--r);
+    background: var(--surface); border-radius: var(--r-pill);
 }
+.main-tab-btn, .radio-group label, .chart-tab { border-radius: var(--r-pill); }
 .main-tabs { margin-bottom: 2rem; max-width: 400px; }
 
 .main-tab-btn, .radio-group label, .chart-tab {
@@ -210,6 +224,7 @@ a { color: var(--accent); }
 .card {
     background: var(--bg); border: 1px solid var(--border);
     border-radius: var(--r); padding: 1.5rem; margin-bottom: 1rem;
+    box-shadow: var(--sh-sm);
 }
 .card-title {
     font-size: 1rem; font-weight: 600; letter-spacing: -0.02em;
@@ -302,10 +317,12 @@ a { color: var(--accent); }
 .summary-grid.has-c { grid-template-columns: repeat(3, 1fr); }
 .summary-card {
     background: var(--bg); border: 1px solid var(--border);
-    border-radius: var(--r); overflow: hidden;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    border-radius: var(--r); overflow: hidden; box-shadow: var(--sh-sm);
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
-.summary-card.winner { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.summary-card:hover { box-shadow: var(--sh-lift); transform: translateY(-2px); }
+.summary-card.winner { border-color: var(--accent-b); box-shadow: 0 0 0 1px var(--accent-b), var(--sh-sm); }
+.summary-card.winner .summary-card-header { background: var(--accent-s); }
 .summary-card-header { position: relative; padding: 1.125rem 1.25rem 1rem; }
 .summary-sym {
     font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
@@ -323,8 +340,8 @@ a { color: var(--accent); }
 .summary-badge, .comp-card-badge {
     display: inline-flex; align-items: center; gap: 0.25rem;
     font-size: 0.75rem; font-weight: 500;
-    background: var(--primary); color: var(--primary-fg);
-    padding: 0.15rem 0.5rem; border-radius: var(--r-sm);
+    background: var(--accent); color: #fff;
+    padding: 0.2rem 0.55rem; border-radius: var(--r-pill);
 }
 .summary-hero { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.875rem; flex-wrap: wrap; }
 .summary-hero-num {
@@ -361,6 +378,7 @@ a { color: var(--accent); }
 
 /* ── 비교표 (shadcn Table) ──────────────────────────────────────────────── */
 .comp-table-wrap {
+    background: var(--bg);
     border: 1px solid var(--border); border-radius: var(--r);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
@@ -393,10 +411,11 @@ a { color: var(--accent); }
 .comp-cards { display: none; flex-direction: column; gap: 0.75rem; }
 .comp-cards-period { display: none; font-size: 0.8125rem; color: var(--ink-3); margin-top: 0.875rem; }
 .comp-card {
+    background: var(--bg);
     border: 1px solid var(--border); border-radius: var(--r);
-    padding: 1rem 1.125rem;
+    padding: 1rem 1.125rem; box-shadow: var(--sh-sm);
 }
-.comp-card.winner { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.comp-card.winner { border-color: var(--accent-b); background: var(--accent-s); box-shadow: 0 0 0 1px var(--accent-b); }
 .comp-card-head {
     display: flex; align-items: center; justify-content: space-between;
     gap: 0.75rem; margin-bottom: 0.875rem;
@@ -432,20 +451,24 @@ a { color: var(--accent); }
 }
 .stats-grid { display: grid; gap: 0.75rem; margin-top: 1.5rem; }
 .stats-grid.four { grid-template-columns: repeat(4, 1fr); }
-.stat-box { border: 1px solid var(--border); border-radius: var(--r); padding: 0.875rem 1rem; }
+.stat-box {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 0.875rem 1rem; box-shadow: var(--sh-sm);
+}
 .stat-label { font-size: 0.8125rem; color: var(--ink-3); margin-bottom: 0.35rem; white-space: nowrap; }
 .stat-value {
     font-size: 1.1875rem; font-weight: 600; color: var(--ink);
     letter-spacing: -0.025em; font-variant-numeric: tabular-nums;
 }
-.stat-value.blue { color: var(--ink); }
+.stat-value.blue { color: var(--accent); }
 .progress-wrap {
     display: flex; border-radius: var(--r); overflow: hidden;
     height: 36px; margin-top: 1.5rem; font-size: 0.875rem; font-weight: 500;
 }
 .progress-profit {
     display: flex; align-items: center; justify-content: center;
-    background: var(--primary); color: var(--primary-fg); min-width: 64px; transition: width 0.3s ease;
+    background: linear-gradient(135deg, #3B82F6 0%, var(--accent) 100%);
+    color: #fff; min-width: 64px; transition: width 0.3s ease;
 }
 .progress-principal {
     display: flex; align-items: center; justify-content: center;
@@ -455,22 +478,27 @@ a { color: var(--accent); }
 /* ── 도구 설명 배너 ─────────────────────────────────────────────────────── */
 .tool-desc-banner { display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; }
 .tool-desc-item {
-    flex: 1; min-width: 260px;
+    flex: 1; min-width: 260px; background: var(--bg);
     border: 1px solid var(--border); border-radius: var(--r); padding: 1.25rem;
+    box-shadow: var(--sh-sm);
 }
 .tool-desc-item-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-.tool-desc-item-icon { display: inline-flex; color: var(--ink); }
+.tool-desc-item-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: var(--r-sm);
+    background: var(--accent-s); color: var(--accent);
+}
 .tool-desc-item-title { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
 .tool-desc-item-body { font-size: 0.9375rem; color: var(--ink-3); line-height: 1.7; }
 
 /* ── 면책 바 ────────────────────────────────────────────────────────────── */
 .disclaimer-bar {
     display: flex; align-items: flex-start; gap: 0.6rem;
-    background: var(--surface); border-radius: var(--r);
+    background: var(--accent-s); color: var(--ink-2); border-radius: var(--r);
     padding: 0.875rem 1rem; margin-top: 1.25rem;
     font-size: 0.875rem; color: var(--ink-2); line-height: 1.6;
 }
-.disclaimer-bar-icon { flex-shrink: 0; margin-top: 2px; color: var(--ink-3); }
+.disclaimer-bar-icon { flex-shrink: 0; margin-top: 2px; color: var(--accent); }
 
 /* ── 팁 팝업 (shadcn Popover) ───────────────────────────────────────────── */
 .tip-popup-wrap { position: relative; }
@@ -596,11 +624,14 @@ details.seo-prose-section[open] > *:last-child { padding-bottom: 1.25rem; }
 .post-list { display: flex; flex-direction: column; gap: 0; }
 .post-card {
     display: block; text-decoration: none; color: inherit;
-    padding: 1.5rem 0; border-top: 1px solid var(--border);
+    padding: 1.5rem 1rem; margin: 0 -1rem;
+    border-top: 1px solid var(--border); border-radius: var(--r);
+    transition: background 0.15s;
 }
-.post-card:first-child { border-top: none; padding-top: 0; }
+.post-card:hover { background: var(--surface); }
+.post-card:first-child { border-top: none; }
 .post-card:hover .post-card-title { color: var(--accent); }
-.post-card-tag { font-size: 0.8125rem; font-weight: 500; color: var(--ink-3); margin-bottom: 0.4rem; }
+.post-card-tag { font-size: 0.8125rem; font-weight: 600; color: var(--accent); margin-bottom: 0.4rem; }
 .post-card-title {
     font-size: clamp(1.125rem, 2.5vw, 1.3125rem); font-weight: 600;
     letter-spacing: -0.025em; line-height: 1.35; color: var(--ink);

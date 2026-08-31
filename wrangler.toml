@@ -5,3 +5,5 @@ compatibility_date = "2024-09-23"
 [assets]
 directory = "."
 binding = "ASSETS"
+# 없는 경로는 404.html 을 보여줍니다 (기본값은 빈 404 응답)
+not_found_handling = "404-page"

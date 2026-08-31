@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAGR이 누적 수익률보다 정확한 이유 — 금융 도구</title>
+    <meta name="description" content="누적 수익률 +890%와 +262%, 어느 쪽이 더 좋은 투자였을까요. 기간이 다르면 답이 바뀝니다. CAGR 계산법과 이 지표가 감추는 것까지 실제 사례로 설명합니다.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FFFFFF">
+    <link rel="canonical" href="https://coin-3av.pages.dev/posts/cagr-explained.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230071E3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='22 7 13.5 15.5 8.5 10.5 2 17'/><polyline points='16 7 22 7 22 13'/></svg>">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4354295365215378" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Article",
+     "headline":"CAGR이 누적 수익률보다 정확한 이유",
+     "description":"CAGR의 계산법과 해석법, 그리고 이 지표가 감추는 위험을 실제 백테스트 사례로 설명합니다.",
+     "datePublished":"2026-08-31","dateModified":"2026-08-31",
+     "author":{"@type":"Organization","name":"금융 도구"},
+     "publisher":{"@type":"Organization","name":"금융 도구"},
+     "mainEntityOfPage":"https://coin-3av.pages.dev/posts/cagr-explained.html","inLanguage":"ko"}
+    </script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav class="topnav">
+    <a href="../index.html" class="topnav-logo"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>금융 도구</a>
+    <a href="../index.html" class="topnav-link">도구</a>
+    <a href="index.html" class="topnav-link">백테스트 사례</a>
+    <a href="../guide.html" class="topnav-link">이용 가이드</a>
+    <a href="../about.html" class="topnav-link">소개</a>
+</nav>
+
+<div class="page-wrap narrow">
+    <div class="page-header">
+        <div class="header-badge">개념</div>
+        <h1>CAGR이 누적 수익률보다 정확한 이유</h1>
+        <p>백테스트 결과에 늘 함께 나오는 두 숫자. 왜 두 개나 필요한지, 언제 어느 쪽을 봐야 하는지 정리합니다.</p>
+        <div class="updated">2026년 8월 31일</div>
+    </div>
+
+    <div class="prose">
+
+        <div class="prose-section">
+            <h2>문제 하나</h2>
+            <p>두 투자 중 어느 쪽이 더 좋은 성과였을까요?</p>
+            <ul>
+                <li><strong>A</strong> — 10년 동안 +890%</li>
+                <li><strong>B</strong> — 5년 동안 +262%</li>
+            </ul>
+            <p>숫자만 보면 A가 세 배 넘게 앞섭니다. 그런데 <strong>연 단위로 환산하면 A는 25.8%, B는 29.4%로 B가 앞섭니다.</strong></p>
+            <p>이건 가상의 예가 아니라 같은 종목의 실제 기록입니다. A는 삼성전자의 최근 10년, B는 같은 종목의 최근 5년입니다. 기간이 두 배 길었으니 누적 수익률이 큰 것은 당연하고, "매년 얼마씩 벌었나"로 보면 최근 5년이 더 좋았던 것입니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>CAGR은 무엇을 계산하나</h2>
+            <p>CAGR(Compound Annual Growth Rate, 연평균 복합 성장률)은 <strong>"매년 몇 %씩 복리로 꾸준히 늘었다면 이 결과가 나오는가"</strong>를 역산한 값입니다.</p>
+            <div class="highlight-box">
+                <p><strong>CAGR = (최종 평가금 ÷ 투자 원금)<sup>1÷투자연수</sup> − 1</strong></p>
+            </div>
+            <p>1,000만원이 10년 뒤 4,000만원이 됐다면, 4배가 되는 데 10년이 걸린 것이므로 4<sup>1/10</sup> − 1 = 약 0.1487, 즉 <strong>CAGR 14.9%</strong>입니다. 매년 14.9%씩 복리로 늘었다면 정확히 10년 뒤 4배가 됩니다.</p>
+            <p>핵심은 이 계산이 <strong>기간을 나눗셈이 아니라 거듭제곱으로 처리한다</strong>는 점입니다. "300% ÷ 10년 = 연 30%"처럼 단순히 나누면 복리 효과를 이중으로 계산하게 되어 실제보다 훨씬 부풀려집니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>기간이 다르면 CAGR로만 비교해야 합니다</h2>
+            <p>실제 백테스트 결과로 확인해 봅시다. 지난 20년간 코스피와 나스닥입니다.</p>
+            <div class="comp-table-wrap">
+                <table class="comp-table">
+                    <thead><tr><th>대상 / 기간</th><th>누적 수익률</th><th>CAGR</th></tr></thead>
+                    <tbody>
+                        <tr><td>코스피 · 20년</td><td class="diff pos">+393.3%</td><td class="diff pos">+8.3%</td></tr>
+                        <tr><td>코스피 · 10년</td><td class="diff pos">+227.0%</td><td class="diff pos">+12.6%</td></tr>
+                        <tr><td>나스닥 · 20년</td><td class="diff pos">+1,115.4%</td><td class="diff pos">+13.3%</td></tr>
+                        <tr><td>나스닥 · 10년</td><td class="diff pos">+409.1%</td><td class="diff pos">+17.7%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>누적 수익률만 보면 "20년 코스피(+393.3%)가 10년 나스닥(+409.1%)과 비슷하다"고 착각하기 쉽습니다. CAGR로 보면 8.3% 대 17.7%로 <strong>연 수익률이 두 배 이상 차이</strong>납니다. 같은 결과에 도달하는 데 걸린 시간이 다르기 때문입니다.</p>
+            <p>정리하면 이렇게 씁니다.</p>
+            <ul>
+                <li><strong>같은 기간을 비교할 때</strong> — 누적 수익률이 직관적입니다. "10년에 얼마가 됐나"가 바로 와닿습니다.</li>
+                <li><strong>기간이 다를 때</strong> — 반드시 CAGR로 봐야 합니다. 누적 수익률은 기간이 긴 쪽에 자동으로 유리합니다.</li>
+                <li><strong>적금·예금과 비교할 때</strong> — CAGR이 곧 "연 몇 % 상품이었나"이므로 바로 맞대어 볼 수 있습니다.</li>
+            </ul>
+        </div>
+
+        <div class="prose-section">
+            <h2>CAGR이 감추는 것</h2>
+            <p>CAGR은 강력하지만 <strong>시작점과 끝점만 보는 지표</strong>입니다. 중간에 무슨 일이 있었는지는 완전히 지워버립니다.</p>
+            <p>연 CAGR 10%가 나오는 두 가지 경로를 생각해 봅시다.</p>
+            <ul>
+                <li><strong>경로 1</strong> — 매년 꾸준히 10%씩 상승</li>
+                <li><strong>경로 2</strong> — 중간에 60% 폭락했다가 막판에 폭등해 같은 지점 도착</li>
+            </ul>
+            <p>CAGR은 둘 다 10%로 표시합니다. 하지만 실제 투자자가 겪는 경험은 전혀 다르고, 경로 2에서 끝까지 버틴 사람은 극히 드뭅니다. <a href="tqqq-long-term.html">레버리지 ETF 사례</a>가 이 문제를 가장 극단적으로 보여줍니다. 고점에서 산 TQQQ는 4년 8개월 뒤 CAGR +12.3%라는 나쁘지 않은 숫자를 남겼지만, 그사이 평가금이 4분의 1까지 줄어든 구간을 통과해야 했습니다.</p>
+            <div class="highlight-box">
+                <p>그래서 백테스트를 볼 때는 <strong>CAGR 숫자와 수익률 곡선을 반드시 함께</strong> 봐야 합니다. 숫자는 결과를, 곡선은 그 결과에 도달하기까지의 경험을 보여줍니다.</p>
+            </div>
+        </div>
+
+        <div class="prose-section">
+            <h2>적립식에서 CAGR을 읽을 때</h2>
+            <p>적립식(DCA) 결과의 CAGR은 조금 다르게 이해해야 합니다. 이 사이트의 도구는 적립식 CAGR을 <strong>(최종 평가금 ÷ 총 납입 원금)</strong>을 전체 기간으로 연환산해 계산합니다.</p>
+            <p>그런데 적립식은 마지막에 넣은 돈의 투자 기간이 한 달밖에 되지 않습니다. 전체 기간으로 나누면 실제 자금이 굴러간 기간보다 긴 기간으로 나누는 셈이라, <strong>적립식 CAGR은 같은 종목의 거치식 CAGR보다 항상 낮게 나옵니다.</strong> 이것은 적립식이 열등해서가 아니라 계산 구조 때문입니다.</p>
+            <p>따라서 적립식 CAGR은 <strong>다른 적립식 결과와 비교할 때</strong>만 의미가 있습니다. 거치식 CAGR과 직접 맞대어 우열을 가리지 마세요. 자세한 내용은 <a href="dca-vs-lumpsum.html">적립식과 거치식 비교</a>에서 다뤘습니다.</p>
+        </div>
+
+        <div class="prose-section">
+            <h2>기억할 세 가지</h2>
+            <ol style="list-style:decimal;padding-left:1.2rem;display:block">
+                <li style="padding-left:0;margin-bottom:0.5rem">기간이 다른 것을 비교할 때는 누적 수익률이 아니라 CAGR을 봅니다.</li>
+                <li style="padding-left:0;margin-bottom:0.5rem">CAGR은 시작점과 끝점만 봅니다. 중간의 낙폭은 곡선으로 따로 확인합니다.</li>
+                <li style="padding-left:0">거치식 CAGR과 적립식 CAGR은 계산 구조가 달라 직접 비교하지 않습니다.</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <div class="back-cta">
+        <a href="../index.html?a=005930.KS&amp;b=SPY&amp;amt=10000000&amp;type=lump&amp;years=10">CAGR 직접 확인해보기 →</a>
+    </div>
+
+    <div class="prose" style="margin-top:3rem">
+        <div class="prose-section">
+            <h2>함께 보면 좋은 글</h2>
+            <ul>
+                <li><a href="dca-vs-lumpsum.html">적립식과 거치식, 실제 데이터로는 어느 쪽이 이겼나</a></li>
+                <li><a href="tqqq-long-term.html">3배 ETF TQQQ, 고점에서 4년 8개월을 버텼더니</a></li>
+                <li><a href="../guide.html">이용 가이드 — 백테스트와 복리 효과 제대로 이해하기</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer">
+    <a href="../index.html" class="footer-brand"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>금융 도구</a>
+    <span class="footer-copy">
+        <a href="index.html">백테스트 사례</a> · <a href="../guide.html">이용 가이드</a> · <a href="../about.html">소개</a> · <a href="../terms.html">이용약관</a> · <a href="../privacy.html">개인정보처리방침</a> · <a href="../contact.html">문의</a><br>
+        Yahoo Finance 데이터 기반 · 투자 결과는 참고용이며 투자 권유가 아닙니다 · &copy; 2026
+    </span>
+</footer>
+
+</body>
+</html>

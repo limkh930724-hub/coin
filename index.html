@@ -239,6 +239,10 @@
 
             <div class="card">
                 <div class="card-title">수치 비교</div>
+                <!-- 좁은 화면 전용 카드 뷰 (renderCompCards 가 채웁니다) -->
+                <div class="comp-cards" id="comp-cards"></div>
+                <div class="comp-cards-period" id="comp-cards-period"></div>
+
                 <div class="comp-table-wrap">
                     <table class="comp-table">
                         <thead>
@@ -793,6 +797,37 @@ function renderTable(symA, resA, symB, resB, symC, resC) {
     cdEl.className = 'diff pos';
 
     document.getElementById('tc-period').textContent = resA.dates[0] + ' ~ ' + resA.dates[resA.dates.length - 1];
+
+    renderCompCards(symA, resA, symB, resB, symC, resC);
+}
+
+// 좁은 화면에서는 표 대신 종목별 카드를 보여줍니다 (가로 스크롤 제거).
+// 표와 같은 데이터를 쓰되, 열/행을 뒤집어 종목 하나가 카드 하나가 됩니다.
+function renderCompCards(symA, resA, symB, resB, symC, resC) {
+    const rows = [
+        ['a', symA, resA],
+        ['b', symB, resB],
+        ...(resC ? [['c', symC, resC]] : []),
+    ];
+    const best = Math.max(...rows.map(([, , r]) => r.cumulReturn));
+    const box = document.getElementById('comp-cards');
+
+    box.innerHTML = rows.map(([key, sym, res]) => `
+        <div class="comp-card ${key}${res.cumulReturn === best ? ' winner' : ''}">
+            <div class="comp-card-head">
+                <span class="comp-card-sym">${krNameFromTicker(sym)}</span>
+                ${res.cumulReturn === best ? '<span class="comp-card-badge">1위</span>' : ''}
+            </div>
+            <dl class="comp-card-rows">
+                <div><dt>누적 수익률</dt><dd class="${res.cumulReturn >= 0 ? 'pos' : 'neg'}">${formatPct(res.cumulReturn)}</dd></div>
+                <div><dt>투자 원금</dt><dd>${formatKRW(res.totalInvested)}</dd></div>
+                <div><dt>최종 평가금</dt><dd class="${res.finalValue >= res.totalInvested ? 'pos' : 'neg'}">${formatKRW(res.finalValue)}</dd></div>
+                <div><dt>CAGR</dt><dd class="${res.cagr >= 0 ? 'pos' : 'neg'}">${formatPct(res.cagr)}</dd></div>
+            </dl>
+        </div>`).join('');
+
+    document.getElementById('comp-cards-period').textContent =
+        '투자기간 ' + resA.dates[0] + ' ~ ' + resA.dates[resA.dates.length - 1];
 }
 
 let btChartInstance = null;

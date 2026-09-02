@@ -309,6 +309,17 @@ a { color: var(--accent); }
 .period-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .date-picker-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
 
+/* 넓은 화면에서는 2열로 접습니다 — 1열로 쌓으면 "비교 시작"이 한 화면을
+   넘어가고 숫자 입력창이 1000px까지 늘어납니다. 순서: 투자방식·금액 /
+   기간·날짜. 에러 메시지만 두 열을 가로지릅니다. */
+@media (min-width: 768px) {
+    .form-rows {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 1.25rem 1.5rem; align-items: start;
+    }
+    .form-rows .error-msg { grid-column: 1 / -1; }
+}
+
 .status-box { text-align: center; padding: 3rem 1rem; color: var(--ink-3); font-size: 0.9375rem; }
 .status-box.error { color: var(--neg); }
 
@@ -321,8 +332,13 @@ a { color: var(--accent); }
     transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
 .summary-card:hover { box-shadow: var(--sh-lift); transform: translateY(-2px); }
-.summary-card.winner { border-color: var(--accent-b); box-shadow: 0 0 0 1px var(--accent-b), var(--sh-sm); }
-.summary-card.winner .summary-card-header { background: var(--accent-s); }
+/* 승자 강조는 그 종목의 시리즈 색을 씁니다 — 고정 파랑을 쓰면 B(주황)가
+   이겼을 때 옆 카드의 A(파랑)와 색이 겹쳐 누가 이겼는지 헷갈립니다. */
+.summary-card.a, .comp-card.a { --win: var(--s1); }
+.summary-card.b, .comp-card.b { --win: var(--s2); }
+.summary-card.c, .comp-card.c { --win: var(--s3); }
+.summary-card.winner { border-color: var(--win); box-shadow: 0 0 0 1px var(--win), var(--sh-sm); }
+.summary-card.winner .summary-card-header { background: color-mix(in srgb, var(--win) 7%, #fff); }
 .summary-card-header { position: relative; padding: 1.125rem 1.25rem 1rem; }
 .summary-sym {
     font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
@@ -340,7 +356,7 @@ a { color: var(--accent); }
 .summary-badge, .comp-card-badge {
     display: inline-flex; align-items: center; gap: 0.25rem;
     font-size: 0.75rem; font-weight: 500;
-    background: var(--accent); color: #fff;
+    background: var(--win, var(--accent)); color: #fff;
     padding: 0.2rem 0.55rem; border-radius: var(--r-pill);
 }
 .summary-hero { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.875rem; flex-wrap: wrap; }
@@ -415,7 +431,7 @@ a { color: var(--accent); }
     border: 1px solid var(--border); border-radius: var(--r);
     padding: 1rem 1.125rem; box-shadow: var(--sh-sm);
 }
-.comp-card.winner { border-color: var(--accent-b); background: var(--accent-s); box-shadow: 0 0 0 1px var(--accent-b); }
+.comp-card.winner { border-color: var(--win); background: color-mix(in srgb, var(--win) 7%, #fff); box-shadow: 0 0 0 1px var(--win); }
 .comp-card-head {
     display: flex; align-items: center; justify-content: space-between;
     gap: 0.75rem; margin-bottom: 0.875rem;
@@ -440,13 +456,16 @@ a { color: var(--accent); }
 .comp-card-rows dd.neg { color: var(--neg); }
 
 /* ── 복리 계산기 ────────────────────────────────────────────────────────── */
-.slider-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+/* 값 칸은 가장 긴 문자열("₩5,000만 (월 ₩417만)")을 담을 만큼 고정 폭이어야
+   네 행의 트랙 길이가 같아집니다. 행 전체 폭도 묶어 트랙이 화면 끝까지
+   늘어나 라벨과 값이 멀어지는 것을 막습니다. */
+.slider-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; max-width: 720px; }
 .slider-row:last-of-type { margin-bottom: 0; }
 .slider-label { font-size: 0.9375rem; color: var(--ink-2); width: 130px; flex-shrink: 0; }
-.slider-row input[type=range] { flex: 1; accent-color: var(--primary); cursor: pointer; height: 28px; }
+.slider-row input[type=range] { flex: 1; min-width: 0; accent-color: var(--primary); cursor: pointer; height: 28px; }
 .slider-value {
     font-size: 1rem; font-weight: 600; color: var(--ink);
-    min-width: 110px; text-align: right; white-space: nowrap;
+    width: 190px; flex-shrink: 0; text-align: right; white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
 .stats-grid { display: grid; gap: 0.75rem; margin-top: 1.5rem; }
@@ -711,7 +730,7 @@ details.seo-prose-section[open] > *:last-child { padding-bottom: 1.25rem; }
     .stats-grid.four { grid-template-columns: 1fr 1fr; }
     .slider-row { flex-wrap: wrap; gap: 0.25rem 0.75rem; margin-bottom: 1.25rem; }
     .slider-label { width: auto; flex: 1; order: 1; }
-    .slider-value { min-width: auto; order: 2; }
+    .slider-value { width: auto; order: 2; }
     .slider-row input[type=range] { flex-basis: 100%; order: 3; }
     .prose, .seo-prose { gap: 2.25rem; }
     .seo-prose { margin-top: 3.5rem; padding-top: 2.5rem; }

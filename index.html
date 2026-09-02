@@ -57,7 +57,6 @@
 
 <div class="page-wrap">
     <div class="page-header">
-        <div class="header-badge">Finance Tools</div>
         <h1>금융 도구 모음</h1>
         <p>수익률 비교와 복리 계산. 가입 없이 무료.</p>
     </div>
@@ -81,10 +80,10 @@
             <div class="card-title-row">
                 <div class="card-title">투자 조건 설정</div>
                 <div class="tip-popup-wrap">
-                    <button class="tip-btn" onclick="toggleTip('tip-backtest')" type="button">💡 사용 팁</button>
+                    <button class="tip-btn" onclick="toggleTip('tip-backtest')" type="button"><svg class="tip-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> 사용 팁</button>
                     <div class="tip-popup" id="tip-backtest">
                         <div class="tip-popup-head">
-                            <span class="tip-popup-head-label">💡 백테스트 비교기 사용법</span>
+                            <span class="tip-popup-head-label"><svg class="tip-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> 백테스트 비교기 사용법</span>
                             <button class="tip-close" onclick="closeTip('tip-backtest')" type="button">✕</button>
                         </div>
                         <div class="tip-popup-body">
@@ -168,7 +167,7 @@
                 </div>
                 <div class="date-picker-wrap">
                     <div class="input-label">날짜 직접 선택 <span style="color:var(--ink-3);font-weight:400">(선택 시 위 기간 버튼 무시)</span></div>
-                    <input type="text" id="date-range" class="input-field" placeholder="📅 클릭해서 날짜 범위를 선택하세요" readonly>
+                    <input type="text" id="date-range" class="input-field" placeholder="클릭해서 날짜 범위를 선택하세요" readonly>
                 </div>
                 <div id="date-error" class="error-msg" style="display:none">날짜를 확인해주세요</div>
             </div>
@@ -189,7 +188,7 @@
                     <div class="summary-card-header">
                         <div class="summary-sym" id="sym-label-a">-</div>
                         <div class="summary-corp" id="corp-a"></div>
-                        <div id="badge-a" style="display:none"><span class="summary-badge">🏆 수익 우위</span></div>
+                        <div id="badge-a" style="display:none"><span class="summary-badge">수익 우위</span></div>
                         <div class="summary-hero"><span class="summary-hero-num" id="ret-a">-</span><span class="summary-hero-label">누적 수익률</span></div>
                     </div>
                     <div class="summary-metrics">
@@ -202,7 +201,7 @@
                     <div class="summary-card-header">
                         <div class="summary-sym" id="sym-label-b">-</div>
                         <div class="summary-corp" id="corp-b"></div>
-                        <div id="badge-b" style="display:none"><span class="summary-badge">🏆 수익 우위</span></div>
+                        <div id="badge-b" style="display:none"><span class="summary-badge">수익 우위</span></div>
                         <div class="summary-hero"><span class="summary-hero-num" id="ret-b">-</span><span class="summary-hero-label">누적 수익률</span></div>
                     </div>
                     <div class="summary-metrics">
@@ -215,7 +214,7 @@
                     <div class="summary-card-header">
                         <div class="summary-sym" id="sym-label-c">-</div>
                         <div class="summary-corp" id="corp-c"></div>
-                        <div id="badge-c" style="display:none"><span class="summary-badge">🏆 수익 우위</span></div>
+                        <div id="badge-c" style="display:none"><span class="summary-badge">수익 우위</span></div>
                         <div class="summary-hero"><span class="summary-hero-num" id="ret-c">-</span><span class="summary-hero-label">누적 수익률</span></div>
                     </div>
                     <div class="summary-metrics">
@@ -276,10 +275,10 @@
             <div class="card-title-row">
                 <div class="card-title">투자 조건</div>
                 <div class="tip-popup-wrap">
-                    <button class="tip-btn" onclick="toggleTip('tip-compound')" type="button">💡 사용 팁</button>
+                    <button class="tip-btn" onclick="toggleTip('tip-compound')" type="button"><svg class="tip-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> 사용 팁</button>
                     <div class="tip-popup" id="tip-compound">
                         <div class="tip-popup-head">
-                            <span class="tip-popup-head-label">💡 복리 계산기 사용법</span>
+                            <span class="tip-popup-head-label"><svg class="tip-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> 복리 계산기 사용법</span>
                             <button class="tip-close" onclick="closeTip('tip-compound')" type="button">✕</button>
                         </div>
                         <div class="tip-popup-body">
@@ -287,8 +286,8 @@
                                 <li><strong>초기 투자금</strong> — 처음 넣는 원금. <code>0</code>으로 설정하면 적립금만으로 계산합니다.</li>
                                 <li><strong>연간 투자금</strong> — 매년 추가 투자 금액. <code>0</code>이면 거치식 단순 복리만 계산합니다.</li>
                                 <li><strong>수익률 참고값</strong> — S&amp;P 500 역사적 평균 약 <strong>7~10%</strong> / 보수적 5% / 공격적 12~15%</li>
-                                <li><strong>그래프 읽기</strong> — 파란 곡선(복리)과 하늘색 선(단리)의 격차가 클수록 복리 효과가 큽니다. 기간이 길수록 차이가 극적으로 벌어집니다.</li>
-                                <li><strong>진행 바</strong> — 금색이 수익, 회색이 원금 비율. 금색 영역이 넓을수록 복리가 잘 작동하고 있다는 신호입니다.</li>
+                                <li><strong>그래프 읽기</strong> — 파란 곡선(복리)과 주황 선(단리)의 격차가 클수록 복리 효과가 큽니다. 기간이 길수록 차이가 극적으로 벌어집니다.</li>
+                                <li><strong>진행 바</strong> — 파란색이 수익, 회색이 원금 비율. 파란 영역이 넓을수록 복리가 잘 작동하고 있다는 신호입니다.</li>
                             </ul>
                         </div>
                     </div>
@@ -455,6 +454,16 @@ function formatKRW(n) {
     return sign + '₩' + Math.round(abs).toLocaleString('ko-KR');
 }
 function formatPct(n, showSign = true) { return (showSign && n > 0 ? '+' : '') + n.toFixed(1) + '%'; }
+
+// 차트 Y축 전용 — 축 전체가 한 단위(억/만)를 쓰게 합니다. 눈금마다 단위가
+// 바뀌면(₩8,000만 위에 ₩1.00억) 눈금 간격을 눈으로 비교할 수 없습니다.
+function axisKRW(v, ticks) {
+    if (v === 0) return '₩0';
+    const max = Math.max(0, ...ticks.map(t => Math.abs(t.value)));
+    const [unit, suffix] = max >= 1e8 ? [1e8, '억'] : max >= 1e4 ? [1e4, '만'] : [1, ''];
+    const n = v / unit;
+    return '₩' + (Number.isInteger(n) ? n.toLocaleString('ko-KR') : n.toFixed(2)) + suffix;
+}
 
 // ══════════════════════════════════════════════
 //  탭 시스템
@@ -860,7 +869,7 @@ function renderChart(dates, resA, resB, symA, symB, mode, resC, symC) {
             },
             scales: {
                 x: { ticks: { maxTicksLimit: 7, font: { size: 11 }, color: '#6E6E73' }, grid: { color: '#E3E3E6' }, border: { color: '#E3E3E6' } },
-                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: v => isReturns ? v.toFixed(0) + '%' : formatKRW(v) }, grid: { color: '#E3E3E6' }, border: { color: '#E3E3E6' } }
+                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: (v, i, ticks) => isReturns ? v.toFixed(0) + '%' : axisKRW(v, ticks) }, grid: { color: '#E3E3E6' }, border: { color: '#E3E3E6' } }
             }
         }
     });
@@ -1016,7 +1025,7 @@ function initCompoundTool() {
             },
             scales: {
                 x: { ticks: { font: { size: 11 }, color: '#6E6E73' }, grid: { color: '#E3E3E6' } },
-                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: v => fmtKRW(v) }, grid: { color: '#E3E3E6' } }
+                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: (v, i, ticks) => axisKRW(v, ticks) }, grid: { color: '#E3E3E6' } }
             }
         }
     });

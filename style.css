@@ -46,6 +46,22 @@
     --r:      14px;   /* 카드·표·팝오버 */
     --r-sm:   10px;   /* 입력창·작은 버튼 */
     --r-pill: 999px;
+    /* 아래는 테마(기본/터미널/리소)가 갈아끼우는 값들입니다.
+       [data-theme] 블록은 이 파일 맨 아래 "테마 모드" 절에 있습니다. */
+    --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+            system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    --font-display: inherit;   /* 제목용 — 기본 테마는 본문과 같은 서체 */
+    --font-num:     inherit;   /* 숫자용 — 터미널 테마에서만 고정폭 */
+    --nav-bg:    rgba(250,250,250,0.82);
+    --s2-ink:    #B36A00;      /* 주황 시리즈를 글자색으로 쓸 때(배경 대비 확보) */
+    --sym-focus: rgba(161,161,170,0.28);
+    --btn-grad:   linear-gradient(180deg, #2B2B30 0%, var(--primary) 100%);
+    --btn-grad-h: linear-gradient(180deg, #3A3A41 0%, var(--primary-h) 100%);
+    --bar-grad:   linear-gradient(135deg, #3B82F6 0%, var(--accent) 100%);
+    /* 차트(JS)가 getComputedStyle 로 읽어갑니다 — chartColors() 참고 */
+    --chart-grid: #E3E3E6;
+    --chart-tick: #6E6E73;
+    --chart-dim:  #C7C7CC;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,8 +69,7 @@
 html { -webkit-text-size-adjust: 100%; }
 
 body {
-    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
-                 system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-family: var(--font);
     background: var(--bg-page);
     color: var(--ink);
     font-size: 16px;
@@ -88,12 +103,12 @@ a { color: var(--accent); }
 
 /* solid */
 .run-btn, .back-cta a {
-    background: linear-gradient(180deg, #2B2B30 0%, var(--primary) 100%);
+    background: var(--btn-grad);
     color: var(--primary-fg); border: none;
     font-size: 0.9375rem; box-shadow: var(--sh-btn);
 }
 .run-btn:hover, .back-cta a:hover {
-    background: linear-gradient(180deg, #3A3A41 0%, var(--primary-h) 100%);
+    background: var(--btn-grad-h);
     transform: translateY(-1px);
 }
 .run-btn:active, .back-cta a:active { transform: translateY(0); box-shadow: var(--sh-sm); }
@@ -145,7 +160,7 @@ a { color: var(--accent); }
 /* ── 네비게이션 ─────────────────────────────────────────────────────────── */
 .topnav {
     position: sticky; top: 0; z-index: 200;
-    background: rgba(250,250,250,0.82);
+    background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; gap: 0.25rem;
@@ -253,7 +268,7 @@ a { color: var(--accent); }
 .sym-input { font-weight: 600; }
 .input-field:focus, .sym-input:focus {
     outline: none; border-color: var(--ink-3);
-    box-shadow: 0 0 0 3px rgba(161,161,170,0.28);
+    box-shadow: 0 0 0 3px var(--sym-focus);
 }
 .error-msg { font-size: 0.8125rem; color: var(--neg); }
 
@@ -273,7 +288,7 @@ a { color: var(--accent); }
 .sym-label::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .sym-block.a .sym-label { color: var(--s1); }
 .sym-block.a .sym-label::before { background: var(--s1); }
-.sym-block.b .sym-label { color: #B36A00; }
+.sym-block.b .sym-label { color: var(--s2-ink); }
 .sym-block.b .sym-label::before { background: var(--s2); }
 .sym-block.c .sym-label { color: var(--s3); }
 .sym-block.c .sym-label::before { background: var(--s3); }
@@ -334,11 +349,11 @@ a { color: var(--accent); }
 .summary-card:hover { box-shadow: var(--sh-lift); transform: translateY(-2px); }
 /* 승자 강조는 그 종목의 시리즈 색을 씁니다 — 고정 파랑을 쓰면 B(주황)가
    이겼을 때 옆 카드의 A(파랑)와 색이 겹쳐 누가 이겼는지 헷갈립니다. */
-.summary-card.a, .comp-card.a { --win: var(--s1); }
-.summary-card.b, .comp-card.b { --win: var(--s2); }
-.summary-card.c, .comp-card.c { --win: var(--s3); }
+.summary-card.a, .comp-card.a { --win: var(--s1); --win-fg: #fff; }
+.summary-card.b, .comp-card.b { --win: var(--s2); --win-fg: #241A00; }  /* 밝은 주황 위 흰 글씨는 대비가 안 나옵니다 */
+.summary-card.c, .comp-card.c { --win: var(--s3); --win-fg: #fff; }
 .summary-card.winner { border-color: var(--win); box-shadow: 0 0 0 1px var(--win), var(--sh-sm); }
-.summary-card.winner .summary-card-header { background: color-mix(in srgb, var(--win) 7%, #fff); }
+.summary-card.winner .summary-card-header { background: color-mix(in srgb, var(--win) 7%, var(--bg)); }
 .summary-card-header { position: relative; padding: 1.125rem 1.25rem 1rem; }
 .summary-sym {
     font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
@@ -356,7 +371,7 @@ a { color: var(--accent); }
 .summary-badge, .comp-card-badge {
     display: inline-flex; align-items: center; gap: 0.25rem;
     font-size: 0.75rem; font-weight: 500;
-    background: var(--win, var(--accent)); color: #fff;
+    background: var(--win, var(--accent)); color: var(--win-fg, #fff);
     padding: 0.2rem 0.55rem; border-radius: var(--r-pill);
 }
 .summary-hero { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.875rem; flex-wrap: wrap; }
@@ -431,7 +446,7 @@ a { color: var(--accent); }
     border: 1px solid var(--border); border-radius: var(--r);
     padding: 1rem 1.125rem; box-shadow: var(--sh-sm);
 }
-.comp-card.winner { border-color: var(--win); background: color-mix(in srgb, var(--win) 7%, #fff); box-shadow: 0 0 0 1px var(--win); }
+.comp-card.winner { border-color: var(--win); background: color-mix(in srgb, var(--win) 7%, var(--bg)); box-shadow: 0 0 0 1px var(--win); }
 .comp-card-head {
     display: flex; align-items: center; justify-content: space-between;
     gap: 0.75rem; margin-bottom: 0.875rem;
@@ -486,7 +501,7 @@ a { color: var(--accent); }
 }
 .progress-profit {
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #3B82F6 0%, var(--accent) 100%);
+    background: var(--bar-grad);
     color: #fff; min-width: 64px; transition: width 0.3s ease;
 }
 .progress-principal {
@@ -565,7 +580,7 @@ a { color: var(--accent); }
     border-radius: 4px; background: var(--bg); border: 1px solid var(--border-2); color: var(--ink-2);
 }
 .tip-tag.a { border-color: var(--s1); color: var(--s1); }
-.tip-tag.b { border-color: var(--s2); color: #B36A00; }
+.tip-tag.b { border-color: var(--s2); color: var(--s2-ink); }
 .tip-tag.c { border-color: var(--s3); color: var(--s3); }
 
 /* ── 하단 해설 아코디언 (index.html) ────────────────────────────────────
@@ -757,3 +772,170 @@ body { animation: pageIn 0.3s ease both; }
 /* 아코디언은 테두리로 구분하므로 간격을 없앱니다 (위 .seo-prose 규칙보다 뒤여야 적용) */
 .seo-prose { gap: 0; }
 .seo-prose > details.seo-prose-section:first-of-type { border-top: 1px solid var(--border); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   테마 모드 — 기본 / 터미널 / 리소
+   theme.js 가 <html data-theme="..."> 를 첫 페인트 전에 세웁니다.
+   여기서 바꾸는 것은 색·서체·테두리·그림자뿐이고 레이아웃은 세 모드가 같습니다.
+   서체는 theme.js 가 활성 테마의 것만 jsDelivr(@fontsource)에서 불러옵니다.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* 제목·숫자 전용 서체 자리 — 기본 테마에서는 inherit 이라 아무 효과도 없습니다 */
+.page-header h1, .card-title, .summary-sym, .comp-card-sym, .prose-section h2 {
+    font-family: var(--font-display);
+}
+.summary-hero-num, .stat-value, .slider-value, .summary-metric-value,
+.comp-table td:not(:first-child), .comp-card-rows dd, .period-btn, .amount-unit {
+    font-family: var(--font-num);
+}
+
+/* ── 터미널 ─────────────────────────────────────────────────────────────── */
+[data-theme="terminal"] {
+    --bg:          #111417;
+    --bg-page:     #0A0C0E;
+    --surface:     #191E23;
+    --surface-2:   #1B2126;
+    --ink:         #DDE3E9;
+    --ink-2:       #AEB8C2;
+    --ink-3:       #6E7B88;
+    --primary:     #3DDC91;
+    --primary-h:   #56E5A3;
+    --primary-fg:  #06130D;
+    --accent:      #3DDC91;
+    --accent-s:    #10241C;
+    --accent-b:    #1E4534;
+    --ring:        #3DDC91;
+    --pos:         #3DDC91;
+    --neg:         #FF5F56;
+    --s1:          #5B9DFF;
+    --s2:          #FFAE30;
+    --s3:          #B98CFF;
+    --s2-ink:      #FFAE30;
+    --border:      #242A30;
+    --border-2:    #2E353C;
+    --sh-sm: none; --sh-md: 0 16px 40px rgba(0,0,0,0.55); --sh-btn: none; --sh-lift: none;
+    --r: 2px; --r-sm: 2px; --r-pill: 2px;
+    --font: 'IBM Plex Sans KR', 'Pretendard Variable', -apple-system, 'Malgun Gothic', sans-serif;
+    --font-display: 'IBM Plex Mono', 'IBM Plex Sans KR', 'Consolas', monospace;
+    --font-num: 'IBM Plex Mono', 'IBM Plex Sans KR', 'Consolas', monospace;
+    --nav-bg:    rgba(10,12,14,0.86);
+    --sym-focus: rgba(61,220,145,0.22);
+    --btn-grad:   var(--primary);
+    --btn-grad-h: var(--primary-h);
+    --bar-grad:   var(--primary);
+    --chart-grid: #1E252B;
+    --chart-tick: #6E7B88;
+    --chart-dim:  #3A434C;
+}
+/* 고정폭 제목은 자간을 벌려야 읽힙니다 */
+[data-theme="terminal"] .card-title,
+[data-theme="terminal"] .prose-section h2 { letter-spacing: 0.02em; }
+[data-theme="terminal"] .page-header h1 { letter-spacing: -0.01em; }
+[data-theme="terminal"] .run-btn { font-weight: 600; letter-spacing: 0.1em; }
+[data-theme="terminal"] .header-badge,
+[data-theme="terminal"] .summary-badge,
+[data-theme="terminal"] .comp-card-badge { letter-spacing: 0.1em; }
+
+/* ── 리소 ───────────────────────────────────────────────────────────────── */
+[data-theme="riso"] {
+    --bg:          #F8F5EC;
+    --bg-page:     #F2EEE1;
+    --surface:     #E9E3D3;
+    --surface-2:   #F0EBDD;
+    --ink:         #16150F;
+    --ink-2:       #3B382C;
+    --ink-3:       #5A554A;
+    --primary:     #16150F;
+    --primary-h:   #2E2B20;
+    --primary-fg:  #F8F5EC;
+    --accent:      #1155DD;
+    --accent-s:    #DCE7FA;
+    --accent-b:    #1155DD;
+    --ring:        #1155DD;
+    --pos:         #0E7A3C;
+    --neg:         #FF4A16;
+    --s1:          #1155DD;
+    --s2:          #FF4A16;
+    --s3:          #7A3FD3;
+    --s2-ink:      #D93A0C;
+    --border:      #16150F;
+    --border-2:    #16150F;
+    --sh-sm:   3px 3px 0 #16150F;
+    --sh-md:   7px 7px 0 #16150F;
+    --sh-btn:  4px 4px 0 #16150F;
+    --sh-lift: 7px 7px 0 #16150F;
+    --r: 0px; --r-sm: 0px; --r-pill: 0px;
+    --font-display: 'Black Han Sans', 'Pretendard Variable', sans-serif;
+    --nav-bg:    #16150F;
+    --sym-focus: rgba(17,85,221,0.25);
+    --btn-grad:   var(--primary);
+    --btn-grad-h: var(--primary-h);
+    --bar-grad:   var(--accent);
+    --chart-grid: #D8D2C0;
+    --chart-tick: #5A554A;
+    --chart-dim:  #A9A292;
+}
+/* 리소의 성격은 두꺼운 검정 테두리 + 흐림 없는 오프셋 그림자입니다 */
+[data-theme="riso"] .card,
+[data-theme="riso"] .summary-card,
+[data-theme="riso"] .comp-card,
+[data-theme="riso"] .stat-box,
+[data-theme="riso"] .comp-table-wrap,
+[data-theme="riso"] .input-field,
+[data-theme="riso"] .sym-input,
+[data-theme="riso"] .period-btn,
+[data-theme="riso"] .add-sym-btn,
+[data-theme="riso"] .tip-popup,
+[data-theme="riso"] .theme-btn,
+[data-theme="riso"] .theme-menu { border-width: 3px; }
+[data-theme="riso"] .main-tabs,
+[data-theme="riso"] .radio-group,
+[data-theme="riso"] .chart-tabs { border: 3px solid var(--ink); padding: 3px; }
+[data-theme="riso"] .page-header h1 { font-weight: 400; letter-spacing: -0.015em; }
+[data-theme="riso"] .topnav { color: var(--primary-fg); }
+[data-theme="riso"] .topnav-logo { color: var(--primary-fg); }
+[data-theme="riso"] .topnav-link { color: #C9C4B4; }
+[data-theme="riso"] .topnav-link:hover { background: #2E2B20; color: var(--primary-fg); }
+[data-theme="riso"] .theme-btn { color: #C9C4B4; background: transparent; border-color: #4A463A; }
+[data-theme="riso"] .theme-btn:hover { background: #2E2B20; color: var(--primary-fg); }
+[data-theme="riso"] .summary-badge,
+[data-theme="riso"] .comp-card-badge { border: 2px solid var(--ink); }
+
+/* ── 테마 전환기 ─────────────────────────────────────────────────────────
+   theme.js 가 .topnav 끝에 넣습니다. 팝오버는 카드와 같은 토큰을 씁니다. */
+.theme-switch { position: relative; flex-shrink: 0; margin-left: 0.25rem; }
+.theme-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    height: 34px; padding: 0 0.7rem;
+    border: 1px solid var(--border-2); background: var(--bg);
+    border-radius: var(--r-sm); cursor: pointer;
+    font-family: inherit; font-size: 0.8125rem; font-weight: 500; color: var(--ink-2);
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.theme-btn:hover { background: var(--surface); color: var(--ink); }
+.theme-btn svg { flex-shrink: 0; }
+.theme-menu {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 300;
+    min-width: 190px; padding: 4px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r); box-shadow: var(--sh-md);
+    display: none; flex-direction: column; gap: 2px;
+}
+.theme-menu.show { display: flex; }
+.theme-menu button {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+    width: 100%; padding: 0.5rem 0.65rem;
+    border: none; background: none; border-radius: var(--r-sm); cursor: pointer;
+    font-family: inherit; font-size: 0.875rem; color: var(--ink-2); text-align: left;
+}
+.theme-menu button:hover { background: var(--surface); color: var(--ink); }
+.theme-menu button[aria-checked="true"] { color: var(--ink); font-weight: 600; }
+.theme-menu-desc { font-size: 0.75rem; font-weight: 400; color: var(--ink-3); }
+@media (max-width: 560px) {
+    .theme-btn-label { display: none; }
+    .theme-btn { padding: 0 0.5rem; }
+}
+
+/* 리소의 주황(--s2)은 진한 주홍이라 흰 글씨가 맞습니다 */
+[data-theme="riso"] .summary-card.b, [data-theme="riso"] .comp-card.b { --win-fg: #F8F5EC; }

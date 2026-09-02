@@ -69,9 +69,36 @@ Separate tab, separate render path (`updateCompound`, lazy-inited once via `comp
 - Korean-language UI and comments throughout; keep new user-facing strings in Korean unless told otherwise.
 - All money formatting goes through `fmtKRW`/`formatKRW` (₩ with 만/억 abbreviation) — don't introduce a second formatting scheme.
 - Emoji characters were deliberately replaced with inline SVG icons everywhere (logo, tab icons, disclaimer bar, favicon) because emoji rendered as `??` in some deployment environments. Do not reintroduce raw emoji into HTML/SVG `<text>` favicons — use inline `<svg>` with `stroke`/`fill` instead.
-- Chart.js and Flatpickr load from `cdn.jsdelivr.net` as unpinned `defer` scripts. All code that touches them therefore runs from `DOMContentLoaded` or later — don't move initialization earlier. The typeface is Pretendard Variable (dynamic subset, also jsDelivr) with the system stack as fallback; there is no Google Fonts request.
-- Chart series colors are hardcoded in the `renderChart`/`initCompoundTool` Chart.js configs, but must match the `--s1`/`--s2`/`--s3` tokens in `style.css` (blue `#0071E3` / orange `#FF9500` / purple `#6E3FD3`) — the summary-card dots, table header dots, and legend dots all read from the same three values. Change all of them together.
+- Chart.js and Flatpickr load from `cdn.jsdelivr.net` as unpinned `defer` scripts. All code that touches them therefore runs from `DOMContentLoaded` or later — don't move initialization earlier. The base typeface is Pretendard Variable (dynamic subset, also jsDelivr) with the system stack as fallback; there is no Google Fonts request — theme fonts come from `@fontsource` on the same jsDelivr host (see "Theme modes" below).
+- Chart colors are **not** hardcoded any more: `chartColors()` in `index.html` reads `--s1`/`--s2`/`--s3` plus `--chart-grid`/`--chart-tick`/`--chart-dim` off `:root` with `getComputedStyle`, so both charts follow the active theme automatically. The summary-card dots, table header dots, and legend dots use the same tokens inline (`style="background:var(--s1)"`). Change a series color in `style.css` only — never reintroduce a hex into the Chart.js configs or the markup.
 - Never set an input's `font-size` below `1rem` — iOS Safari zooms the page on focus below 16px.
 - `<meta name="google-site-verification">`, the AdSense `<script>` tag (`ca-pub-...`), `ads.txt`, `robots.txt`, and `sitemap.xml` are all live AdSense/Search-Console verification artifacts — don't remove or change the publisher ID without checking with the site owner, since that will break ad serving / search verification.
 - **Canonical domain is `coin-3av.pages.dev`.** It appears in the `<link rel="canonical">` of every page, in `index.html`'s og:url / og:image / twitter:image / JSON-LD `url`, in each article's Article JSON-LD (`mainEntityOfPage`), in every `<loc>` in `sitemap.xml`, and in the `Sitemap:` line of `robots.txt`. If it changes, sweep them all: `grep -rl 'coin-3av.pages.dev' .`. Adding a new page means adding a `<loc>` to `sitemap.xml` too.
 - `og-image.png` still uses the old gold/cream design and no longer matches the site. Regenerate it if social previews matter.
+
+## Theme modes (theme.js + the `[data-theme]` blocks in style.css)
+
+Three modes ship: `base` (the shadcn default), `terminal` (dark, monospace), `riso`
+(paper, thick ink borders, hard offset shadows). They swap **tokens only** — color,
+typeface, border width, shadow, radius. **Layout is identical in all three**; nothing
+in a theme block may move or resize an element.
+
+- `theme.js` is loaded **synchronously** in every page's `<head>`, immediately before
+  the `style.css` link. It must not be `defer`red: it sets `<html data-theme>` from
+  `localStorage['fin-theme']` before first paint, and deferring it makes the base theme
+  flash first. It also injects the switcher into `.topnav` on `DOMContentLoaded` and
+  updates `<meta name="theme-color">`.
+- Theme fonts load lazily: `theme.js` appends the `@fontsource` stylesheet for the
+  active theme only, so the base theme costs no extra request. Terminal pulls
+  `ibm-plex-sans-kr` + `ibm-plex-mono`, riso pulls `black-han-sans`.
+- Everything a theme needs must be a token. When adding a component, use the existing
+  tokens (`--bg`, `--ink*`, `--border*`, `--sh-*`, `--r*`, `--font*`, `--s1..3`) rather
+  than a literal color/radius/shadow, or it will look wrong in two of the three modes.
+  `--font-display` and `--font-num` default to `inherit`, so applying them is a no-op
+  in the base theme.
+- Charts keep their colors in JS objects, so they cannot follow CSS on their own:
+  `theme.js` fires a `themechange` event and `index.html` listens for it — it re-runs
+  `renderChart` from the stashed `_chartData` and patches `compoundChartInstance` in
+  place. A new chart must be hooked into that listener too.
+- Adding a page means adding the `theme.js` script tag along with the nav/footer markup
+  (`../theme.js` under `posts/`, absolute `/theme.js` in `404.html`).

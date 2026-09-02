@@ -44,6 +44,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="theme.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -247,9 +248,9 @@
                         <thead>
                             <tr>
                                 <th>항목</th>
-                                <th id="th-a"><span class="sym-dot" style="background:#0071E3"></span><span id="th-a-text">A</span></th>
-                                <th id="th-b"><span class="sym-dot" style="background:#FF9500"></span><span id="th-b-text">B</span></th>
-                                <th id="th-c" style="display:none"><span class="sym-dot" style="background:#6E3FD3"></span><span id="th-c-text">C</span></th>
+                                <th id="th-a"><span class="sym-dot" style="background:var(--s1)"></span><span id="th-a-text">A</span></th>
+                                <th id="th-b"><span class="sym-dot" style="background:var(--s2)"></span><span id="th-b-text">B</span></th>
+                                <th id="th-c" style="display:none"><span class="sym-dot" style="background:var(--s3)"></span><span id="th-c-text">C</span></th>
                                 <th id="th-diff">1등 − 2등</th>
                             </tr>
                         </thead>
@@ -328,9 +329,9 @@
                 <div class="progress-principal" id="c-progress-principal">-</div>
             </div>
             <div class="chart-legend" style="margin-top:1rem;">
-                <div class="legend-item"><span class="legend-dot" style="background:#0071E3"></span>복리 성장</div>
-                <div class="legend-item"><span class="legend-dot" style="background:#FF9500"></span>단리 성장</div>
-                <div class="legend-item"><span class="legend-dot" style="background:#C7C7CC"></span>원금</div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--s1)"></span>복리 성장</div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--s2)"></span>단리 성장</div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--chart-dim)"></span>원금</div>
             </div>
             <div class="chart-wrap"><canvas id="compound-chart"></canvas></div>
         </div>
@@ -454,6 +455,16 @@ function formatKRW(n) {
     return sign + '₩' + Math.round(abs).toLocaleString('ko-KR');
 }
 function formatPct(n, showSign = true) { return (showSign && n > 0 ? '+' : '') + n.toFixed(1) + '%'; }
+
+// 차트 색은 CSS 토큰에서 읽습니다 — 테마(기본/터미널/리소)를 자동으로 따라갑니다.
+// 하드코딩하면 style.css 의 --s1~3 과 어긋나므로 여기서만 가져옵니다.
+function chartColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
+    return { s1: v('--s1'), s2: v('--s2'), s3: v('--s3'),
+             grid: v('--chart-grid'), tick: v('--chart-tick'), dim: v('--chart-dim') };
+}
+const fillOf = hex => hex + '10';   // 6자리 hex + 알파 ≈ 6%
 
 // 차트 Y축 전용 — 축 전체가 한 단위(억/만)를 쓰게 합니다. 눈금마다 단위가
 // 바뀌면(₩8,000만 위에 ₩1.00억) 눈금 간격을 눈으로 비교할 수 없습니다.
@@ -843,19 +854,20 @@ let btChartInstance = null;
 let _chartData = null;
 
 function renderChart(dates, resA, resB, symA, symB, mode, resC, symC) {
-    _chartData = { dates, resA, resB, symA, symB, resC, symC };
+    _chartData = { dates, resA, resB, symA, symB, resC, symC, mode };
     if (btChartInstance) btChartInstance.destroy();
     const isReturns = mode === 'returns';
+    const C = chartColors();
     function downsample(arr) {
         if (arr.length <= 500) return arr;
         const step = arr.length / 500;
         return Array.from({ length: 500 }, (_, i) => arr[Math.round(i * step)]);
     }
     const datasets = [
-        { label: krNameFromTicker(symA), data: downsample(isReturns ? resA.returns : resA.values), borderColor: '#0071E3', backgroundColor: 'rgba(0,113,227,0.06)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
-        { label: krNameFromTicker(symB), data: downsample(isReturns ? resB.returns : resB.values), borderColor: '#FF9500', backgroundColor: 'rgba(255,149,0,0.06)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 }
+        { label: krNameFromTicker(symA), data: downsample(isReturns ? resA.returns : resA.values), borderColor: C.s1, backgroundColor: fillOf(C.s1), fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 },
+        { label: krNameFromTicker(symB), data: downsample(isReturns ? resB.returns : resB.values), borderColor: C.s2, backgroundColor: fillOf(C.s2), fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 }
     ];
-    if (resC) datasets.push({ label: krNameFromTicker(symC), data: downsample(isReturns ? resC.returns : resC.values), borderColor: '#6E3FD3', backgroundColor: 'rgba(110,63,211,0.06)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 });
+    if (resC) datasets.push({ label: krNameFromTicker(symC), data: downsample(isReturns ? resC.returns : resC.values), borderColor: C.s3, backgroundColor: fillOf(C.s3), fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.2 });
     const ctx = document.getElementById('btChart').getContext('2d');
     btChartInstance = new Chart(ctx, {
         type: 'line',
@@ -864,16 +876,36 @@ function renderChart(dates, resA, resB, symA, symB, mode, resC, symC) {
             responsive: true, maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, usePointStyle: true, pointStyle: 'line', pointStyleWidth: 24 } },
+                legend: { position: 'top', labels: { color: C.tick, font: { size: 12, weight: '600' }, usePointStyle: true, pointStyle: 'line', pointStyleWidth: 24 } },
                 tooltip: { backgroundColor: 'rgba(29,29,31,0.92)', titleFont: { size: 12 }, bodyFont: { size: 13, weight: '700' }, padding: 10, callbacks: { label: ctx => ` ${ctx.dataset.label}: ${isReturns ? formatPct(ctx.parsed.y) : formatKRW(ctx.parsed.y)}` } }
             },
             scales: {
-                x: { ticks: { maxTicksLimit: 7, font: { size: 11 }, color: '#6E6E73' }, grid: { color: '#E3E3E6' }, border: { color: '#E3E3E6' } },
-                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: (v, i, ticks) => isReturns ? v.toFixed(0) + '%' : axisKRW(v, ticks) }, grid: { color: '#E3E3E6' }, border: { color: '#E3E3E6' } }
+                x: { ticks: { maxTicksLimit: 7, font: { size: 11 }, color: C.tick }, grid: { color: C.grid }, border: { color: C.grid } },
+                y: { ticks: { font: { size: 11 }, color: C.tick, callback: (v, i, ticks) => isReturns ? v.toFixed(0) + '%' : axisKRW(v, ticks) }, grid: { color: C.grid }, border: { color: C.grid } }
             }
         }
     });
 }
+
+// 테마를 바꾸면 차트 색만 다시 칠합니다 — 데이터는 다시 받지 않습니다.
+// (theme.js 가 'themechange' 를 쏩니다)
+window.addEventListener('themechange', () => {
+    const C = chartColors();
+    if (_chartData) {
+        const d = _chartData;
+        renderChart(d.dates, d.resA, d.resB, d.symA, d.symB, d.mode, d.resC, d.symC);
+    }
+    if (compoundChartInstance) {
+        const ch = compoundChartInstance;
+        [C.s1, C.s2, C.dim].forEach((c, i) => { ch.data.datasets[i].borderColor = c; });
+        ch.data.datasets[0].backgroundColor = fillOf(C.s1);
+        for (const ax of [ch.options.scales.x, ch.options.scales.y]) {
+            ax.ticks.color = C.tick;
+            ax.grid.color = C.grid;
+        }
+        ch.update('none');
+    }
+});
 
 function switchChartMode(mode) {
     document.getElementById('tab-returns').className = 'chart-tab' + (mode === 'returns' ? ' active' : '');
@@ -1005,15 +1037,17 @@ async function runBacktest(opts = {}) {
 // ══════════════════════════════════════════════
 //  복리 계산기
 // ══════════════════════════════════════════════
+let compoundChartInstance = null;
 function initCompoundTool() {
-    const chart = new Chart(document.getElementById('compound-chart').getContext('2d'), {
+    const C = chartColors();
+    const chart = compoundChartInstance = new Chart(document.getElementById('compound-chart').getContext('2d'), {
         type: 'line',
         data: {
             labels: [],
             datasets: [
-                { label: '복리 성장', data: [], borderColor: '#0071E3', backgroundColor: 'rgba(0,113,227,0.06)', fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2.5 },
-                { label: '단리 성장', data: [], borderColor: '#FF9500', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
-                { label: '원금',      data: [], borderColor: '#C7C7CC', fill: false, borderDash: [6, 4], pointRadius: 0, borderWidth: 1.5 }
+                { label: '복리 성장', data: [], borderColor: C.s1, backgroundColor: fillOf(C.s1), fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2.5 },
+                { label: '단리 성장', data: [], borderColor: C.s2, fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                { label: '원금',      data: [], borderColor: C.dim, fill: false, borderDash: [6, 4], pointRadius: 0, borderWidth: 1.5 }
             ]
         },
         options: {
@@ -1024,8 +1058,8 @@ function initCompoundTool() {
                 tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtKRW(ctx.parsed.y) } }
             },
             scales: {
-                x: { ticks: { font: { size: 11 }, color: '#6E6E73' }, grid: { color: '#E3E3E6' } },
-                y: { ticks: { font: { size: 11 }, color: '#6E6E73', callback: (v, i, ticks) => axisKRW(v, ticks) }, grid: { color: '#E3E3E6' } }
+                x: { ticks: { font: { size: 11 }, color: C.tick }, grid: { color: C.grid } },
+                y: { ticks: { font: { size: 11 }, color: C.tick, callback: (v, i, ticks) => axisKRW(v, ticks) }, grid: { color: C.grid } }
             }
         }
     });

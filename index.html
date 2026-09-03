@@ -44,6 +44,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script defer src="tour.js"></script>
     <script src="theme.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -95,6 +96,7 @@
                                 <li><strong>심볼 형식</strong> — 미국: <code>SPY</code> <code>AAPL</code>, 한국: <code>005930.KS</code> 또는 <strong>"삼성전자"</strong>처럼 한글로 입력하면 자동완성이 표시됩니다, 암호화폐: <code>BTC-USD</code></li>
                                 <li><strong>CAGR</strong> — 연평균 복합 성장률. 기간이 달라도 수익률을 공정하게 비교할 수 있는 지표입니다.</li>
                             </ul>
+                            <button class="tip-replay" type="button" onclick="startTour()">처음부터 단계별로 안내받기</button>
                             <div class="tip-example">
                                 <div class="tip-example-label">레버리지 비교 예시</div>
                                 <div class="tip-example-tags">
@@ -142,7 +144,7 @@
             <div class="section-divider"></div>
 
             <div class="form-rows" style="margin-top:1.25rem">
-                <div class="form-row">
+                <div class="form-row" id="step-type">
                     <div class="input-label step"><span class="step-num">2</span>투자방식</div>
                     <div class="radio-group">
                         <label class="selected" id="lbl-dca"><input type="radio" name="invest-type" value="dca" checked><span>적립식(월)</span></label>
@@ -156,7 +158,7 @@
                     </div>
                     <span class="amount-unit">원</span>
                 </div>
-                <div class="form-row">
+                <div class="form-row" id="step-period">
                     <div class="input-label step"><span class="step-num">4</span>비교 기간</div>
                     <div class="period-row">
                         <button class="period-btn" data-years="1">1Y</button>

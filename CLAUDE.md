@@ -82,6 +82,32 @@ Separate tab, separate render path (`updateCompound`, lazy-inited once via `comp
 - **Canonical domain is `coin-3av.pages.dev`.** It appears in the `<link rel="canonical">` of every page, in `index.html`'s og:url / og:image / twitter:image / JSON-LD `url`, in each article's Article JSON-LD (`mainEntityOfPage`), in every `<loc>` in `sitemap.xml`, and in the `Sitemap:` line of `robots.txt`. If it changes, sweep them all: `grep -rl 'coin-3av.pages.dev' .`. Adding a new page means adding a `<loc>` to `sitemap.xml` too.
 - `og-image.png` still uses the old gold/cream design and no longer matches the site. Regenerate it if social previews matter.
 
+## First-visit tour (tour.js)
+
+`index.html` only — the other pages have no form to explain. `tour.js` is a
+`defer`red script that spotlights five targets in order (`#sym-ab-grid`,
+`#step-type`, `.amount-row`, `#step-period`, `#run-btn`) with a bubble beside
+each. `#step-type` and `#step-period` exist *solely* as tour anchors: both are
+plain `.form-row` divs and there is no other way to tell them apart. Renaming or
+removing them silently drops a step (`show()` skips a missing target).
+
+- The spotlight is one absolutely-positioned div with `box-shadow: 0 0 0 9999px`
+  — no four-rect overlay, no SVG mask. It is positioned in **document**
+  coordinates (`rect + window.scrollY`), which is why nothing listens for scroll:
+  the hole travels with the page on its own. Only `resize` re-runs `place()`.
+- `pointer-events: none` on the hole keeps the form usable during the tour, so
+  the tour is never a trap.
+- It auto-runs once, on `load` + 600ms so it isn't explaining a page that hasn't
+  drawn its first result yet. Finishing or skipping (also Esc) writes
+  `localStorage['fin-tour-done']`; reloading mid-tour without acknowledging it
+  brings it back, which is deliberate.
+- Replay paths: the `처음부터 단계별로 안내받기` button inside the 사용 팁 popover
+  (`onclick="startTour()"`, exposed as `window.startTour`), or `?tour=1`.
+  `startTour()` closes any open tip popover first — the class is `.open`, not
+  `.show`.
+- The step chips (`.step-num` / `.step-opt`) in the form are a separate,
+  always-on affordance and share nothing with the tour but the numbering.
+
 ## Theme modes (theme.js + the `[data-theme]` blocks in style.css)
 
 Two modes ship: `base` (the shadcn default) and `riso` (paper ground, 3px ink

@@ -1011,20 +1011,29 @@ body { animation: pageIn 0.3s ease both; }
 }
 .tour-body { font-size: 0.875rem; line-height: 1.65; color: var(--ink-2); }
 .tour-actions {
-    display: flex; align-items: center; gap: 0.5rem;
+    display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem;
     margin-top: 1rem;
 }
+/* 해제는 이동 버튼과 줄을 나눕니다 — 340px 안에서 넷이 한 줄에 들어가면 눌리기 어렵습니다 */
+.tour-dismiss {
+    display: flex; gap: 0.25rem;
+    margin: 0.75rem -0.4rem -0.25rem;
+    padding-top: 0.75rem; border-top: 1px solid var(--border);
+}
+.tour-dismiss button {
+    flex: 1; height: 44px; padding: 0 0.4rem;   /* 손가락으로 누르는 것 — 44px 아래로 내리지 마세요 */
+    border: none; background: none; cursor: pointer;
+    font-family: inherit; font-size: 0.75rem; font-weight: 500; color: var(--ink-3);
+    border-radius: var(--r-sm);
+    transition: background 0.15s, color 0.15s;
+}
+.tour-dismiss button:hover { background: var(--surface); color: var(--ink); }
 .tour-actions button {
     font-family: inherit; font-size: 0.8125rem; font-weight: 500;
     height: 34px; padding: 0 0.85rem; cursor: pointer;
     border-radius: var(--r-sm);
     transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.tour-skip {
-    border: none; background: none; color: var(--ink-3);
-    margin-right: auto; padding-left: 0;
-}
-.tour-skip:hover { color: var(--ink); }
 .tour-prev {
     border: 1px solid var(--border-2); background: var(--bg); color: var(--ink-2);
 }

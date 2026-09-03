@@ -98,9 +98,16 @@ removing them silently drops a step (`show()` skips a missing target).
 - `pointer-events: none` on the hole keeps the form usable during the tour, so
   the tour is never a trap.
 - It auto-runs once, on `load` + 600ms so it isn't explaining a page that hasn't
-  drawn its first result yet. Finishing or skipping (also Esc) writes
-  `localStorage['fin-tour-done']`; reloading mid-tour without acknowledging it
-  brings it back, which is deliberate.
+  drawn its first result yet. Two dismissals with different weights: `다시 안 보기`
+  and finishing the last step write `localStorage['fin-tour-done']` (permanent),
+  while `오늘 하루 안 보기` and Esc write `fin-tour-snooze` — a timestamp for
+  tonight's midnight, not now-plus-24h, so the label is literally true. Esc is
+  deliberately the soft one; a stray keypress should not retire the tour forever.
+  Reloading mid-tour without touching either still brings it back.
+- `scrollIntoView` is **instant, not smooth**. `place()` runs right after it and
+  reads `window.scrollY`, which during a smooth scroll is still the old value —
+  the viewport clamp then computes against the wrong origin and the bubble lands
+  off-screen. The motion comes from the hole's CSS transition instead.
 - Replay paths: the `처음부터 단계별로 안내받기` button inside the 사용 팁 popover
   (`onclick="startTour()"`, exposed as `window.startTour`), or `?tour=1`.
   `startTour()` closes any open tip popover first — the class is `.open`, not

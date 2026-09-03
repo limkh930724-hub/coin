@@ -8,12 +8,13 @@
    다시 보려면 "사용 팁" 안의 버튼(startTour) 또는 주소에 ?tour=1.
 
    좌표는 뷰포트가 아니라 **문서** 기준(pageX/pageY)으로 잡습니다. 그래야
-   스크롤할 때 구멍이 대상을 따라다니느라 스크롤 이벤트를 붙들 필요가 없습니다.
+   스크롤 이벤트를 붙들지 않아도 구멍과 말풍선이 대상에 붙어 따라다닙니다.
    ========================================================================== */
 (function () {
     'use strict';
 
-    var KEY = 'fin-tour-done';
+    var KEY = 'fin-tour-done';      // 영구 해제
+    var SNOOZE = 'fin-tour-snooze'; // 이 시각까지만 안 보기
     var PAD = 8;      // 구멍이 대상보다 얼마나 넉넉한지
     var GAP = 12;     // 구멍과 말풍선 사이
 
@@ -53,6 +54,13 @@
         try { localStorage.setItem(KEY, '1'); } catch (e) { /* 저장만 못 할 뿐입니다 */ }
     }
 
+    // "오늘 하루"는 말 그대로 오늘 자정까지입니다 (24시간이 아니라)
+    function snooze() {
+        var midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+        try { localStorage.setItem(SNOOZE, String(midnight.getTime())); } catch (e) { /* 위와 같습니다 */ }
+    }
+
     function close() {
         if (onResize) { window.removeEventListener('resize', onResize); onResize = null; }
         document.removeEventListener('keydown', onKey);
@@ -61,7 +69,7 @@
     }
 
     function onKey(e) {
-        if (e.key === 'Escape') { done(); close(); }
+        if (e.key === 'Escape') { snooze(); close(); }
         else if (e.key === 'ArrowRight') next();
         else if (e.key === 'ArrowLeft') prev();
     }
@@ -80,13 +88,17 @@
         hole.style.width = (r.width + PAD * 2) + 'px';
         hole.style.height = (r.height + PAD * 2) + 'px';
 
-        // 아래에 자리가 없으면 위로 — 말풍선이 화면 밖으로 나가지 않게
+        // 아래에 자리가 없으면 위로 놓고, 그래도 모자라면 화면 안으로 밀어 넣습니다.
+        // 대상이 길면(모바일의 종목 칸) 양쪽 다 부족할 수 있어서 마지막 조임이 필요합니다.
         var below = window.innerHeight - r.bottom;
         var above = r.top;
         var popH = pop.offsetHeight;
-        pop.style.top = (below >= popH + GAP + PAD || below >= above)
-            ? (top + r.height + PAD + GAP) + 'px'
-            : (top - PAD - GAP - popH) + 'px';
+        var want = (below >= popH + GAP + PAD || below >= above)
+            ? top + r.height + PAD + GAP
+            : top - PAD - GAP - popH;
+        var minTop = window.scrollY + 16;
+        var maxTop = window.scrollY + window.innerHeight - popH - 16;
+        pop.style.top = Math.max(minTop, Math.min(want, maxTop)) + 'px';
 
         // 가로는 대상 왼쪽에 맞추되 화면 안으로 밀어 넣습니다
         var maxLeft = window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 16;
@@ -103,9 +115,12 @@
             '<div class="tour-title"></div>' +
             '<div class="tour-body"></div>' +
             '<div class="tour-actions">' +
-              '<button type="button" class="tour-skip">건너뛰기</button>' +
               '<button type="button" class="tour-prev">이전</button>' +
               '<button type="button" class="tour-next"></button>' +
+            '</div>' +
+            '<div class="tour-dismiss">' +
+              '<button type="button" class="tour-snooze">오늘 하루 안 보기</button>' +
+              '<button type="button" class="tour-never">다시 안 보기</button>' +
             '</div>';
         pop.querySelector('.tour-count').textContent = (idx + 1) + ' / ' + STEPS.length;
         pop.querySelector('.tour-title').textContent = step.title;
@@ -119,9 +134,12 @@
         nextBtn.textContent = idx === STEPS.length - 1 ? '완료' : '다음';
         nextBtn.addEventListener('click', next);
 
-        pop.querySelector('.tour-skip').addEventListener('click', function () { done(); close(); });
+        pop.querySelector('.tour-snooze').addEventListener('click', function () { snooze(); close(); });
+        pop.querySelector('.tour-never').addEventListener('click', function () { done(); close(); });
 
-        el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        // 스크롤은 즉시 — smooth 로 하면 place() 가 아직 옛 scrollY 로 재서
+        // 화면 안으로 밀어 넣는 계산이 어긋납니다. 움직임은 구멍의 CSS 전환이 냅니다.
+        el.scrollIntoView({ block: 'center' });
         place();
         nextBtn.focus({ preventScroll: true });
     }
@@ -159,7 +177,11 @@
 
     function firstVisit() {
         if (new URLSearchParams(location.search).get('tour') === '1') return true;
-        try { return !localStorage.getItem(KEY); } catch (e) { return false; }
+        try {
+            if (localStorage.getItem(KEY)) return false;
+            var until = Number(localStorage.getItem(SNOOZE));
+            return !(until && Date.now() < until);
+        } catch (e) { return false; }   // 저장이 막힌 브라우저에서 매번 뜨는 것보다 낫습니다
     }
 
     if (firstVisit()) {

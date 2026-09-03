@@ -108,7 +108,8 @@
                 </div>
             </div>
 
-            <div class="sym-grid" id="sym-ab-grid" style="margin-bottom:1.25rem">
+            <div class="input-label step"><span class="step-num">1</span>비교할 종목</div>
+            <div class="sym-grid" id="sym-ab-grid" style="margin-top:0.5rem;margin-bottom:1.25rem">
                 <div class="sym-block a">
                     <div class="sym-label">종목 A</div>
                     <div class="sym-input-wrap">
@@ -142,7 +143,7 @@
 
             <div class="form-rows" style="margin-top:1.25rem">
                 <div class="form-row">
-                    <div class="input-label">투자방식</div>
+                    <div class="input-label step"><span class="step-num">2</span>투자방식</div>
                     <div class="radio-group">
                         <label class="selected" id="lbl-dca"><input type="radio" name="invest-type" value="dca" checked><span>적립식(월)</span></label>
                         <label id="lbl-lump"><input type="radio" name="invest-type" value="lump"><span>일괄투자</span></label>
@@ -150,13 +151,13 @@
                 </div>
                 <div class="amount-row">
                     <div class="input-group">
-                        <label class="input-label" id="amount-label">월 투자금액</label>
+                        <label class="input-label step" id="amount-label"><span class="step-num">3</span><span id="amount-label-text">월 투자금액</span></label>
                         <input type="text" id="bt-amount" class="input-field" value="1,000,000" placeholder="예: 1,000,000">
                     </div>
                     <span class="amount-unit">원</span>
                 </div>
                 <div class="form-row">
-                    <div class="input-label">비교 기간</div>
+                    <div class="input-label step"><span class="step-num">4</span>비교 기간</div>
                     <div class="period-row">
                         <button class="period-btn" data-years="1">1Y</button>
                         <button class="period-btn" data-years="3">3Y</button>
@@ -167,7 +168,7 @@
                     </div>
                 </div>
                 <div class="date-picker-wrap">
-                    <div class="input-label">날짜 직접 선택 <span style="color:var(--ink-3);font-weight:400">(선택 시 위 기간 버튼 무시)</span></div>
+                    <div class="input-label step"><span class="step-opt">선택</span>날짜 직접 선택<span style="color:var(--ink-3);font-weight:400">(지정하면 위 기간 버튼은 무시됩니다)</span></div>
                     <input type="text" id="date-range" class="input-field" placeholder="클릭해서 날짜 범위를 선택하세요" readonly>
                 </div>
                 <div id="date-error" class="error-msg" style="display:none">날짜를 확인해주세요</div>
@@ -670,7 +671,7 @@ document.querySelectorAll('input[name=invest-type]').forEach(r => {
     r.addEventListener('change', () => {
         document.getElementById('lbl-lump').classList.toggle('selected', r.value === 'lump' && r.checked);
         document.getElementById('lbl-dca').classList.toggle('selected', r.value === 'dca' && r.checked);
-        document.getElementById('amount-label').textContent = r.value === 'dca' ? '월 투자금액' : '투자금액';
+        document.getElementById('amount-label-text').textContent = r.value === 'dca' ? '월 투자금액' : '투자금액';
     });
 });
 

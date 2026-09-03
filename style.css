@@ -257,6 +257,27 @@ a { color: var(--accent); }
 .form-row { display: flex; flex-direction: column; gap: 0.5rem; }
 .input-label { font-size: 0.875rem; font-weight: 500; color: var(--ink); }
 
+/* ── 단계 표시 ────────────────────────────────────────────────────────────
+   폼이 스스로 순서를 말합니다 — 배너도, 투어도, 닫아야 할 것도 없습니다.
+   토큰만 쓰므로 리소에서는 각진 잉크 칩으로 알아서 바뀝니다. */
+.input-label.step { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+.step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 19px; height: 19px; flex-shrink: 0;
+    background: var(--primary); color: var(--primary-fg);
+    border-radius: var(--r-pill);
+    font-size: 0.6875rem; font-weight: 600; line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+/* 번호가 없는 이유를 눈에 보이게 — 날짜는 단계가 아니라 선택 사항입니다 */
+.step-opt {
+    display: inline-flex; align-items: center;
+    height: 19px; padding: 0 0.45rem; flex-shrink: 0;
+    border: 1px solid var(--border-2); color: var(--ink-3);
+    border-radius: var(--r-pill);
+    font-size: 0.6875rem; font-weight: 500; line-height: 1;
+}
+
 /* 입력 글자는 16px 미만으로 내리지 마세요 — iOS Safari가 포커스 시 확대합니다 */
 .input-field, .sym-input {
     width: 100%; height: 42px; padding: 0 0.75rem;

@@ -1,8 +1,8 @@
 /* ==========================================================================
-   테마 모드 — 기본 / 터미널 / 리소
+   테마 모드 — 기본 / 리소
 
    style.css 의 [data-theme="..."] 블록과 짝입니다. 바꾸는 것은 색·서체·
-   테두리·그림자뿐이고 레이아웃은 세 모드가 같습니다.
+   테두리·그림자·아이콘 그리기 방식이고, 레이아웃은 두 모드가 같습니다.
 
    모든 페이지가 <head> 에서 style.css 직전에 **동기로** 불러옵니다.
    defer 를 붙이면 기본 테마가 한 번 그려졌다가 바뀌면서 깜빡입니다.
@@ -18,12 +18,10 @@
 
     var THEMES = {
         base:     { label: '기본',   desc: '밝고 단정하게',    bar: '#FFFFFF', fonts: [] },
-        terminal: { label: '터미널', desc: '어둡게 · 고정폭',  bar: '#0A0C0E',
-                    fonts: ['ibm-plex-sans-kr@5/index.css', 'ibm-plex-mono@5/index.css'] },
         riso:     { label: '리소',   desc: '종이에 인쇄한 듯', bar: '#16150F',
                     fonts: ['black-han-sans@5/index.css'] }
     };
-    var ORDER = ['base', 'terminal', 'riso'];
+    var ORDER = ['base', 'riso'];
 
     var ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
         ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +

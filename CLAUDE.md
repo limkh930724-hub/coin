@@ -31,7 +31,7 @@ Yahoo Finance has no public CORS headers, so all chart-data fetches in `index.ht
 
 ## Pages and routing
 
-There is no router/framework. Every HTML file shares one stylesheet, `style.css` — it holds the whole design system (`:root` tokens, all component classes for both the tool page and the prose pages). The system follows **shadcn/ui defaults**: a neutral zinc palette, black solid buttons (`--primary`), 8px radius, borders instead of shadows. Buttons come in three variants — solid (`.run-btn`, `.back-cta a`), outline (`.period-btn`, `.add-sym-btn`), ghost (`.tip-btn`) — and `.main-tabs` / `.radio-group` / `.chart-tabs` all share the shadcn Tabs shape (muted track, white card on the active item). Color is reserved for data only: the `--s1`/`--s2`/`--s3` series and `--pos`/`--neg`. Change a color, a type size, or the nav/footer look there once; do not reintroduce per-page `<style>` blocks.
+There is no router/framework. Every HTML file shares one stylesheet, `style.css` — it holds the whole design system (`:root` tokens, all component classes for both the tool page and the prose pages). The system follows **shadcn/ui defaults**: a neutral zinc palette and black solid buttons (`--primary`), but with a softened radius pair (`--r` 14px for cards/tables/popovers, `--r-sm` 10px for inputs/small buttons, `--r-pill` for tabs and period chips) and real layered shadows (`--sh-sm`/`--sh-md`/`--sh-btn`/`--sh-lift`) on raised elements. Flat elements still separate with a border, not a shadow. Buttons come in three variants — solid (`.run-btn`, `.back-cta a`), outline (`.period-btn`, `.add-sym-btn`), ghost (`.tip-btn`) — and `.main-tabs` / `.radio-group` / `.chart-tabs` all share the shadcn Tabs shape (muted track, white card on the active item). Color is reserved for data only: the `--s1`/`--s2`/`--s3` series and `--pos`/`--neg`. The winner highlight follows that rule through `--win`/`--win-fg`, set per card by the `.a`/`.b`/`.c` class and consumed by `.summary-card.winner`, `.comp-card.winner` and the badges — so the highlight is always the winning symbol's own series color, never a fixed accent (a fixed blue collided with series A whenever B or C won). `--win-fg` exists because white text fails on the light orange series. Change a color, a type size, or the nav/footer look there once; do not reintroduce per-page `<style>` blocks.
 
 Pages at the repo root link `style.css` relatively; files under `posts/` link `../style.css`. `404.html` is the one page that uses absolute paths (`/style.css`, `/posts/…`) — it has to, because Cloudflare serves it for arbitrary URL depths.
 
@@ -49,10 +49,12 @@ The nav and footer markup is duplicated in every page (no templating). Adding a 
 - Up to 3 symbols (`sym-a`/`sym-b`/`sym-c`, with C toggled via `showSymC()`/`hideSymC()`) are compared over a date range (preset year buttons or a Flatpickr range picker) using either lump-sum (`calcLumpSum`) or DCA (`calcDCA`) investment simulation.
 - `fetchStockData(sym, start, end)` pulls Yahoo chart data through the proxy; `fetchSymbolName(sym)` resolves a ticker to a display name on input blur (`setupSymbolLookup`).
 - **Shareable URLs:** `applyUrlParams()` runs in `DOMContentLoaded` right after `initTabs()` and fills the form from `?a=&b=&c=&amt=&type=&years=`; `syncUrl()` writes those params back after every successful run so the address bar is always a shareable link. Articles under `posts/` link into the tool with these params. `initTabs()` separately owns `?tab=`, and neither function touches the other's params. A hand-picked Flatpickr date range is deliberately not encoded — only the preset year buttons round-trip.
-- **Auto-run on load:** `DOMContentLoaded` calls `runBacktest({ autorun: true })` when both symbol inputs have their default values (SPY vs QQQ · 10y), so the first paint isn't an empty page — this exists for AdSense content requirements. The `autorun` flag exists solely to suppress the `scrollIntoView` jump; don't reuse it for other behavior.
+- **Auto-run on load:** `DOMContentLoaded` calls `runBacktest({ autorun: true })` whenever **both symbol inputs are non-empty**. Because that runs after `applyUrlParams()`, every `?a=&b=` deep link from `posts/` fires a run on load too — not just the SPY-vs-QQQ default. It exists so the first paint isn't an empty page (an AdSense content requirement). The `autorun` flag exists solely to suppress the `scrollIntoView` jump; don't reuse it for other behavior.
 - **Korean stock support**: `KR_STOCKS` is a hand-maintained array of `{name, ticker}` for major KOSPI (`.KS`)/KOSDAQ (`.KQ`) tickers. `setupKrAutocomplete(inputId, dropdownId)` wires a type-ahead dropdown on each symbol input (filtered by Korean name substring match). The dropdown's `mousedown` handler calls `preventDefault()` so the click registers before the input's `blur` fires, then sets `input.value` to the ticker and dispatches a synthetic `blur` event to reuse `setupSymbolLookup`'s existing name-resolution logic. `krNameFromTicker(ticker)` reverse-maps a ticker back to its Korean name for display in summary cards/table headers/chart legend, falling back to the raw ticker for non-KR symbols. When adding tickers, verify them against the chart API first — delistings/mergers do happen (e.g. `091990.KQ` Celltrion Healthcare was removed after its 2023 merger).
 - **Comparison table on mobile:** the `.comp-table` is transposed (rows = metrics, columns = symbols), which cannot be turned into per-symbol cards with CSS alone. `renderCompCards()` — called at the end of `renderTable()` — fills `#comp-cards` with one card per symbol from the same data. Under 640px the table is hidden and the cards shown; above it, the reverse. Both views must stay in sync, so add any new metric to `renderTable` **and** `renderCompCards`.
 - Results render into: summary cards (`renderSummaryCards`), a comparison table (`renderTable`), and a Chart.js line chart (`renderChart`, toggled between cumulative-return % and absolute value via `tab-returns`/`tab-value`). `renderChart` downsamples long series before plotting.
+- Both charts' ₩ axes go through `axisKRW(v, ticks)`, **not** `fmtKRW`/`formatKRW`. It picks one unit (만 or 억) from the axis maximum and applies it to every tick, because per-tick formatting produced axes that flipped units mid-scale (`₩8,000만` directly under `₩1.00억`), which makes tick spacing unreadable. A new ₩ axis must use it.
+- `showStatus()` reveals `#status-box` **without scrolling to it**, while the success path ends with `scrollIntoView`. On a tall form the loading and error messages therefore render off-screen and the run looks like it did nothing. Anything added to the error path inherits that.
 
 ### 하단 해설 아코디언
 
@@ -60,9 +62,13 @@ The `.seo-prose` block at the bottom of `index.html` is five `<details class="se
 
 Mobile ordering is deliberate: hero (one short line) → tabs → tool, with `.tool-desc-banner` moved *below* the tool panels. The tool must be reachable without scrolling past prose. Don't move descriptive copy back above `.main-tabs`.
 
+`.form-rows` is a plain vertical stack on mobile but becomes a **two-column grid above 768px**, so its children auto-place in pairs (투자방식 + 금액, then 기간 + 날짜) and "비교 시작" stays on the same screen as the form. Adding or removing a row therefore reflows the desktop pairing — check both widths, and give anything that must span both columns `grid-column: 1 / -1` (as `.error-msg` does).
+
 ## Compound calculator tool internals (index.html)
 
 Separate tab, separate render path (`updateCompound`, lazy-inited once via `compoundInited` when the tab is first opened — `initCompoundTool()` constructs the Chart.js instance, so it must not run before the panel is visible). Pure client-side math, no network calls — compares compound vs. simple vs. straight-line (no interest) growth on sliders for principal/annual addition/rate/years.
+
+`.slider-value` has a **fixed 190px width**, sized to the longest string the row can produce (`₩5,000만 (월 ₩417만)` at the 연간 투자금 maximum). It is not cosmetic: the row is a flex line, so a value wider than its box shortens that row's track and the four sliders stop lining up. If a value string can get longer, widen the box to match. `.slider-row` is likewise capped at 720px so the track doesn't stretch label and value to opposite edges of a wide card.
 
 ## Conventions specific to this repo
 
@@ -78,10 +84,19 @@ Separate tab, separate render path (`updateCompound`, lazy-inited once via `comp
 
 ## Theme modes (theme.js + the `[data-theme]` blocks in style.css)
 
-Three modes ship: `base` (the shadcn default), `terminal` (dark, monospace), `riso`
-(paper, thick ink borders, hard offset shadows). They swap **tokens only** — color,
-typeface, border width, shadow, radius. **Layout is identical in all three**; nothing
-in a theme block may move or resize an element.
+Two modes ship: `base` (the shadcn default) and `riso` (paper ground, 3px ink
+borders, hard offset shadows, riso blue/orange inks, Black Han Sans headings, and
+a pictogram icon treatment). A third `terminal` mode existed briefly and was
+removed — `saved()` in `theme.js` falls back to `base` for any stored value not in
+`THEMES`, so a visitor with `fin-theme=terminal` still in localStorage lands on
+base with no error. Don't add a migration for it.
+
+**Layout is identical in both modes.** A theme block may change how an element is
+*painted* — color, typeface, border width, shadow, radius, and how an icon is
+stroked or filled — but must not change the page's layout structure: no
+repositioning, no reordering, no new breakpoints, nothing that changes which
+element sits where. That is what keeps one set of markup and one responsive pass
+valid for both.
 
 - `theme.js` is loaded **synchronously** in every page's `<head>`, immediately before
   the `style.css` link. It must not be `defer`red: it sets `<html data-theme>` from
@@ -89,13 +104,21 @@ in a theme block may move or resize an element.
   flash first. It also injects the switcher into `.topnav` on `DOMContentLoaded` and
   updates `<meta name="theme-color">`.
 - Theme fonts load lazily: `theme.js` appends the `@fontsource` stylesheet for the
-  active theme only, so the base theme costs no extra request. Terminal pulls
-  `ibm-plex-sans-kr` + `ibm-plex-mono`, riso pulls `black-han-sans`.
+  active theme only, so the base theme costs no extra request. Riso pulls
+  `black-han-sans`; base pulls nothing.
 - Everything a theme needs must be a token. When adding a component, use the existing
   tokens (`--bg`, `--ink*`, `--border*`, `--sh-*`, `--r*`, `--font*`, `--s1..3`) rather
-  than a literal color/radius/shadow, or it will look wrong in two of the three modes.
+  than a literal color/radius/shadow, or it will look wrong in riso.
   `--font-display` and `--font-num` default to `inherit`, so applying them is a no-op
   in the base theme.
+- **The pictogram layer** (the "리소: 픽토그램" block) restyles the shared inline SVG
+  icons without touching markup, which works because a CSS `stroke-width` /
+  `stroke-linecap` / `fill` rule beats the same-named SVG presentation attribute. Riso
+  redraws every icon heavy with square caps and miter joins, fills the warning
+  triangle solid (targeting its `path` and `line` children separately), turns the round
+  series dots square with a `box-shadow` ring (a ring, not a border, so the dot's size
+  is unchanged), and adds an ink square before card and chart titles. A new icon needs
+  its class added to those selector lists or it will stay thin-lined in riso.
 - Charts keep their colors in JS objects, so they cannot follow CSS on their own:
   `theme.js` fires a `themechange` event and `index.html` listens for it — it re-runs
   `renderChart` from the stashed `_chartData` and patches `compoundChartInstance` in

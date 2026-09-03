@@ -470,10 +470,13 @@ const fillOf = hex => hex + '10';   // 6자리 hex + 알파 ≈ 6%
 // 바뀌면(₩8,000만 위에 ₩1.00억) 눈금 간격을 눈으로 비교할 수 없습니다.
 function axisKRW(v, ticks) {
     if (v === 0) return '₩0';
-    const max = Math.max(0, ...ticks.map(t => Math.abs(t.value)));
+    const vals = ticks.map(t => Math.abs(t.value));
+    const max = Math.max(0, ...vals);
     const [unit, suffix] = max >= 1e8 ? [1e8, '억'] : max >= 1e4 ? [1e4, '만'] : [1, ''];
-    const n = v / unit;
-    return '₩' + (Number.isInteger(n) ? n.toLocaleString('ko-KR') : n.toFixed(2)) + suffix;
+    // 자릿수도 축 전체가 같아야 합니다 — 하나라도 정수가 아니면 전부 소수 2자리
+    const frac = vals.some(x => !Number.isInteger(x / unit)) ? 2 : 0;
+    return '₩' + (v / unit).toLocaleString('ko-KR',
+        { minimumFractionDigits: frac, maximumFractionDigits: frac }) + suffix;
 }
 
 // ══════════════════════════════════════════════
